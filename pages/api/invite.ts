@@ -4,8 +4,6 @@ import connectDB from 'backend/middlewares/connectDB';
 import inviteModel from 'backend/models/invite.model';
 import connectionModel from 'backend/models/connection.model';
 import userModel from 'backend/models/user.model';
-import messageModel from 'backend/models/message.model';
-import { pusher } from 'common/lib/pusher';
 import getUserId from 'backend/middlewares/getUserId';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -57,25 +55,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               by: null,
             },
           });
-
-          const newMessage = new messageModel({
-            administrate: true,
-            connectionId: newConnection._id,
-            sender: _id,
-            message: 'created conversation',
-            date: new Date(),
-            read: [_id],
-          });
-
-          await (
-            await newMessage.save()
-          ).populate({ path: 'sender', model: userModel });
-
-          await pusher.trigger(
-            `presence-${newConnection._id}`,
-            'new_msg',
-            newMessage
-          );
 
           await newConnection.save();
           await inviteFound.delete();

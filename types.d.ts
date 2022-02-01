@@ -34,16 +34,4 @@ export declare global {
       yes: boolean;
     };
   }
-
-  interface MessageType {
-    administrate?: boolean;
-    sender: UserType;
-    message: string;
-    connectionId: string;
-    date: Date;
-    read: UserType[];
-    pin: boolean;
-    _id: string;
-    deleted: boolean;
-  }
 }
