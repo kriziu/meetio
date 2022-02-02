@@ -14,7 +14,7 @@ interface Props {
 const SearchUser: FC<Props> = ({ user }) => {
   return (
     <motion.li initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-      <Link href="/profile" passHref>
+      <Link href={`/profile/${user._id}`} passHref>
         <UserContainer as="a">
           <AvatarSmall imageURL={user.imageURL} />
           <Header4>

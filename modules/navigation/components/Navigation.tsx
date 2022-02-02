@@ -1,7 +1,9 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
+
+import { userContext } from 'common/context/userContext';
 
 import {
   NavBackground,
@@ -14,6 +16,10 @@ import NavigationItem from './NavigationItem';
 const MotionNavBackground = motion(NavBackground);
 
 const Navigation: FC = () => {
+  const {
+    user: { _id },
+  } = useContext(userContext);
+
   const router = useRouter();
 
   const [show, setShow] = useState(false);
@@ -32,6 +38,7 @@ const Navigation: FC = () => {
     };
   }, [router.events, router.pathname]);
 
+  console.log(_id);
   return (
     <>
       {show && (
@@ -52,7 +59,7 @@ const Navigation: FC = () => {
           >
             <motion.ul variants={animateList}>
               <NavigationItem name="For you" linkTo="/" />
-              <NavigationItem name="Profile" linkTo="/profile" />
+              <NavigationItem name="Profile" linkTo={`/profile/${_id}`} />
               <NavigationItem name="Friends" linkTo="/friends" />
               <NavigationItem name="Notifications" linkTo="/notifications" />
             </motion.ul>

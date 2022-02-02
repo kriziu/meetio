@@ -7,7 +7,7 @@ const StyledImage = styled(Image)`
   border-radius: 50%;
 `;
 
-const Container = styled.div<{ size: number; active?: boolean }>`
+const Container = styled.div<{ size: number }>`
   border-radius: 50%;
   background-color: gray;
 
@@ -15,48 +15,29 @@ const Container = styled.div<{ size: number; active?: boolean }>`
   height: ${({ size }) => size}px;
 
   position: relative;
-
-  ::before {
-    display: ${({ active }) => (active ? 'block' : 'none')};
-    width: ${({ size }) => size / 35}rem;
-    height: ${({ size }) => size / 35}rem;
-    border-radius: 50%;
-    background-color: var(--color-green);
-    content: '';
-    position: absolute;
-    right: ${({ size }) => size / 18}px;
-    bottom: ${({ size }) => size / 18}px;
-    z-index: 5;
-  }
 `;
 
 export const Avatar: FC<{
   imageURL: string;
-  active?: boolean;
-  unoptimized?: boolean;
-}> = ({ imageURL, active, unoptimized }) => {
+}> = ({ imageURL }) => {
   return (
-    <Container size={80} active={active}>
+    <Container size={250}>
       {imageURL && imageURL !== '-1' && (
         <StyledImage
           src={imageURL}
-          width={80}
-          height={80}
+          width={250}
+          height={250}
           alt="Avatar"
           objectFit="cover"
-          unoptimized={unoptimized}
         />
       )}
     </Container>
   );
 };
 
-export const AvatarSmall: FC<{ imageURL: string; active?: boolean }> = ({
-  imageURL,
-  active,
-}) => {
+export const AvatarSmall: FC<{ imageURL: string }> = ({ imageURL }) => {
   return (
-    <Container size={50} active={active}>
+    <Container size={50}>
       {imageURL && imageURL !== '-1' && (
         <StyledImage
           src={imageURL}
@@ -72,11 +53,10 @@ export const AvatarSmall: FC<{ imageURL: string; active?: boolean }> = ({
 
 export const AvatarVerySmall: FC<{
   imageURL: string;
-  active?: boolean;
   onClick?: () => void;
-}> = ({ imageURL, active, onClick }) => {
+}> = ({ imageURL, onClick }) => {
   return (
-    <Container size={30} active={active} onClick={onClick}>
+    <Container size={30} onClick={onClick}>
       {imageURL && imageURL !== '-1' && (
         <StyledImage
           src={imageURL}

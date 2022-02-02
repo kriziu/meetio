@@ -1,5 +1,8 @@
 import { FC } from 'react';
 import type { AppProps } from 'next/app';
+
+import UserProvider from 'common/context/userContext';
+
 import { GlobalStyles } from 'common/styles/GlobalStyles';
 import Navigation from 'modules/navigation/components/Navigation';
 import { Circle } from 'common/components/Shapes/Circle.elements';
@@ -8,7 +11,7 @@ import Search from 'modules/search/components/Search';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   return (
-    <>
+    <UserProvider>
       <GlobalStyles />
       <Navigation />
 
@@ -23,7 +26,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
         <Search />
         <Component {...pageProps} />
       </div>
-    </>
+    </UserProvider>
   );
 };
 
