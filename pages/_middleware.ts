@@ -3,14 +3,17 @@ import { NextResponse } from 'next/server';
 
 import jwt from '@tsndr/cloudflare-worker-jwt';
 
-// CLEAR ALL
-const redirect = NextResponse.redirect('/login')
-  .clearCookie('REFRESH')
-  .clearCookie('ACCESS');
-
 export const middleware = async (req: NextRequest, ev: NextFetchEvent) => {
   const access = req.cookies['ACCESS'];
   const refresh = req.cookies['REFRESH'];
+
+  const url = req.nextUrl.clone();
+  url.pathname = '/login';
+
+  // CLEAR ALL
+  const redirect = NextResponse.rewrite(url)
+    .clearCookie('REFRESH')
+    .clearCookie('ACCESS');
 
   const validAccess = access
     ? await jwt.verify(access, process.env.ACCESS_TOKEN_SECRET as string)

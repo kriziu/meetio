@@ -43,6 +43,8 @@ export const NavBtnIcon = styled.span<{ opened: boolean }>`
   width: 2.3rem;
   height: 0.4rem;
 
+  transition: var(--trans-default);
+
   transform: ${({ opened }) => (opened ? 'rotate(225deg)' : 'rotate(0)')};
 
   :focus {
@@ -60,6 +62,7 @@ export const NavBtnIcon = styled.span<{ opened: boolean }>`
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--color-black);
+    transition: var(--trans-default);
 
     opacity: ${({ opened }) => (opened ? 0 : 1)};
   }
@@ -76,12 +79,16 @@ export const NavBtnIcon = styled.span<{ opened: boolean }>`
     transform: translateX(-50%)
       ${({ opened }) => (opened ? 'rotate(90deg)' : 'rotate(0)')};
     background-color: var(--color-black);
+
+    transition: var(--trans-default);
   }
 `;
 
 export const NavBackground = styled(Flex)`
   background-color: var(--color-primary);
   height: 100vh;
+  width: 100vw;
+  position: absolute;
 
   a {
     color: var(--color-black);
@@ -100,22 +107,3 @@ export const NavBackground = styled(Flex)`
 
   z-index: 10;
 `;
-
-export const variant = {
-  open: {
-    clipPath: `circle(200% at calc(100vw - 4rem) 4rem)`,
-    transition: {
-      type: 'spring',
-      stiffness: 400,
-      restDelta: 2,
-    },
-  },
-  closed: {
-    clipPath: 'circle(1rem at calc(100vw - 4rem) 4rem)',
-    transition: {
-      type: 'spring',
-      stiffness: 400,
-      damping: 40,
-    },
-  },
-};

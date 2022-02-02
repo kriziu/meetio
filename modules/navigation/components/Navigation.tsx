@@ -2,16 +2,16 @@ import { FC, useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 import {
   NavBackground,
   NavBtn,
   NavBtnIcon,
-  variant,
 } from '../styles/Navigation.elements';
+import { animateBg, animateList } from '../animations/Navigation.animations';
+import NavigationItem from './NavigationItem';
 
-const MNavBackground = motion(NavBackground);
+const MotionNavBackground = motion(NavBackground);
 
 const Navigation: FC = () => {
   const router = useRouter();
@@ -23,7 +23,14 @@ const Navigation: FC = () => {
     if (router.pathname === '/login' || router.pathname === '/register')
       setShow(false);
     else setShow(true);
-  }, [router.pathname]);
+
+    const closeNav = () => setOpened(false);
+    router.events.on('routeChangeStart', closeNav);
+
+    return () => {
+      router.events.off('routeChangeStart', closeNav);
+    };
+  }, [router.events, router.pathname]);
 
   return (
     <>
@@ -34,37 +41,22 @@ const Navigation: FC = () => {
             active={!opened}
             opened={opened}
             aria-label="Navigation"
+            tabIndex={0}
           >
             <NavBtnIcon opened={opened} />
           </NavBtn>
-          <MNavBackground
+          <MotionNavBackground
             initial={false}
             animate={opened ? 'open' : 'closed'}
-            variants={variant}
+            variants={animateBg}
           >
-            <ul onClick={() => setOpened(false)}>
-              <li>
-                <Link href="/">
-                  <a>For you</a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/profile">
-                  <a>Profile</a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/friends">
-                  <a>Friends</a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/notifications">
-                  <a>Notifications</a>
-                </Link>
-              </li>
-            </ul>
-          </MNavBackground>
+            <motion.ul variants={animateList}>
+              <NavigationItem name="For you" linkTo="/" />
+              <NavigationItem name="Profile" linkTo="/profile" />
+              <NavigationItem name="Friends" linkTo="/friends" />
+              <NavigationItem name="Notifications" linkTo="/notifications" />
+            </motion.ul>
+          </MotionNavBackground>
         </>
       )}
     </>

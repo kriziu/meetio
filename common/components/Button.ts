@@ -5,7 +5,7 @@ export const Button = styled.button<{
   icon?: boolean;
   width?: string;
 }>`
-  border-radius: 1.5rem;
+  border-radius: 3rem;
   font-size: 1.6rem;
   width: ${({ inputSize, width }) =>
     width ? width : inputSize ? '25rem' : '100%'};

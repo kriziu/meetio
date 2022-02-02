@@ -1,8 +1,20 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { BigSpinner } from 'common/components/Spinner';
+import Spinner, { BigSpinner } from 'common/components/Spinner';
 
-const useSpinner = (): [
+export const useSpinner = (): [
+  () => JSX.Element,
+  Dispatch<SetStateAction<boolean>>,
+  boolean
+] => {
+  const [loading, setLoading] = useState(false);
+
+  const RenderSpinner = () => <Spinner loading={loading} />;
+
+  return [RenderSpinner, setLoading, loading];
+};
+
+export const useBigSpinner = (): [
   () => JSX.Element,
   Dispatch<SetStateAction<boolean>>
 ] => {
@@ -12,5 +24,3 @@ const useSpinner = (): [
 
   return [RenderSpinner, setLoading];
 };
-
-export default useSpinner;

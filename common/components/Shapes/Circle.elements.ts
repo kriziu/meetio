@@ -8,7 +8,7 @@ export const Circle = styled(m.div)<{
 }>`
   border-radius: 50%;
   background-color: ${({ secondary }) =>
-    secondary === 1 ? '#FB4C26' : '#4442B1'};
+    secondary === 1 ? '#FB4C26' : '#222'};
   width: ${({ radius }) => radius}rem;
   height: ${({ radius }) => radius}rem;
   position: absolute;

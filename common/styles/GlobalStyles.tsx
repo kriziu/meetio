@@ -10,7 +10,6 @@ export const GlobalStyles = () => (
         padding: 0;
         box-sizing: inherit;
         font-family: 'Montserrat', sans-serif;
-        transition: var(--trans-default);
         color: var(--color-white);
       }
 

@@ -4,12 +4,14 @@ import { GlobalStyles } from 'common/styles/GlobalStyles';
 import Navigation from 'modules/navigation/components/Navigation';
 import { Circle } from 'common/components/Shapes/Circle.elements';
 import { Background } from 'common/components/Background';
+import Search from 'modules/search/components/Search';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <>
       <GlobalStyles />
       <Navigation />
+
       <div>
         <Circle radius={30} position={{ x: 30, y: 50 }} />
         <Circle radius={10} position={{ x: 45, y: 85 }} secondary={1} />
@@ -17,7 +19,10 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
         <Circle radius={13} position={{ x: 75, y: 20 }} secondary={1} />
       </div>
       <Background />
-      <Component {...pageProps} />
+      <div style={{ padding: '2rem' }}>
+        <Search />
+        <Component {...pageProps} />
+      </div>
     </>
   );
 };

@@ -1,14 +1,25 @@
 import { FC } from 'react';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import { ClipLoader } from 'react-spinners';
 
 import { Flex } from './Flex';
 
-const Spinner: FC = () => {
+const MotionFlex = motion(Flex);
+
+const Spinner: FC<{ loading: boolean }> = ({ loading }) => {
   return (
-    <Flex style={{ height: '100%', width: '100%' }}>
-      <ClipLoader color="white" loading={true} size={100} />
-    </Flex>
+    <AnimatePresence>
+      {loading && (
+        <MotionFlex
+          style={{ height: '100%', width: '100%' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <ClipLoader color="white" loading={true} size={100} />
+        </MotionFlex>
+      )}
+    </AnimatePresence>
   );
 };
 
