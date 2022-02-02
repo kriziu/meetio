@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useContext, useState } from 'react';
 
 import axios from 'axios';
 
-import useSpinner from 'common/hooks/useSpinner';
+import { useSpinner } from 'common/hooks/useSpinner';
 import { userContext } from 'common/context/userContext';
 
 import { Flex } from 'common/components/Flex';
