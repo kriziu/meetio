@@ -36,6 +36,12 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
       custom={height}
       style={{ height: '100vh' }}
       {...handlers}
+      onWheel={e => {
+        const current = listRef.current;
+        if (!current) return;
+
+        if (e.deltaY < 0 && current.scrollTop <= 0) setTopVisible(true);
+      }}
     >
       <Flex>
         <Header3 onClick={() => setTopVisible(prev => !prev)}>

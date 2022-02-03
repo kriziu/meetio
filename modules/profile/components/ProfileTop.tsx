@@ -35,6 +35,9 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
       animate={topVisible ? 'visible' : 'hidden'}
       visible={topVisible}
       {...handlers}
+      onWheel={e => {
+        if (e.deltaY > 0) setTopVisible(false);
+      }}
     >
       <Avatar imageURL={user.imageURL} />
       <Header1>
