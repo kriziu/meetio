@@ -10,7 +10,7 @@ export const animateBg = {
   closed: {
     clipPath: 'circle(1rem at calc(100vw - 4.5rem) 4.5rem)',
     transition: {
-      delay: 0.3,
+      delay: 0.2,
       type: 'spring',
       stiffness: 400,
       damping: 40,

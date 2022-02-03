@@ -1,36 +1,41 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 
-import { useRouter } from 'next/router';
-import axios from 'axios';
-import { BsChevronDown } from 'react-icons/bs';
-
-import { userContext } from 'common/context/userContext';
+import { useSwipeable } from 'react-swipeable';
+import { motion } from 'framer-motion';
 
 import { Avatar } from 'common/components/Avatars';
 import { Center } from '../styles/ProfileTop.elements';
-import { Header1, Header3, Header5 } from 'common/components/Headers';
+import { Header1, Header5 } from 'common/components/Headers';
 import { Button } from 'common/components/Button';
 import { Flex } from 'common/components/Flex';
+import useWindowSize from 'common/hooks/useWindowSize';
+import { animateProfileTop } from '../animations/ProfileTop.animations';
 
-const ProfileTop: FC = () => {
-  const me = useContext(userContext).user;
+const MotionCenter = motion(Center);
 
-  const router = useRouter();
-  const userId = router.query.userId as string;
+interface Props {
+  user: UserType;
+  topVisible: boolean;
+  setTopVisible: Dispatch<SetStateAction<boolean>>;
+}
 
-  const [user, setUser] = useState<UserType>(me);
+const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
+  const [, height] = useWindowSize();
 
-  useEffect(() => {
-    if (me._id === userId) {
-      setUser(me);
-      return;
-    }
-
-    axios.get(`/api/user/${userId}`).then(res => setUser(res.data));
-  }, [userId, me, me._id]);
+  const handlers = useSwipeable({
+    onSwipedUp: e => {
+      if (e.absY > 50) setTopVisible(false);
+    },
+  });
 
   return (
-    <Center>
+    <MotionCenter
+      height={height}
+      variants={animateProfileTop}
+      animate={topVisible ? 'visible' : 'hidden'}
+      visible={topVisible}
+      {...handlers}
+    >
       <Avatar imageURL={user.imageURL} />
       <Header1>
         {user.fName} {user.lName}
@@ -40,11 +45,7 @@ const ProfileTop: FC = () => {
         <Button>Add friend</Button>
         <Button>Follow</Button>
       </Flex>
-      <Flex className="bottom">
-        <Header3>See user post</Header3>
-        <BsChevronDown />
-      </Flex>
-    </Center>
+    </MotionCenter>
   );
 };
 

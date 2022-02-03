@@ -16,11 +16,12 @@ export const useSpinner = (): [
 
 export const useBigSpinner = (): [
   () => JSX.Element,
-  Dispatch<SetStateAction<boolean>>
+  Dispatch<SetStateAction<boolean>>,
+  boolean
 ] => {
   const [loading, setLoading] = useState(false);
 
   const RenderSpinner = () => <BigSpinner loading={loading} />;
 
-  return [RenderSpinner, setLoading];
+  return [RenderSpinner, setLoading, loading];
 };

@@ -1,13 +1,9 @@
 import type { NextPage } from 'next';
 
-import ProfileTop from 'modules/profile/components/ProfileTop';
+import Profile from 'modules/profile/components/Profile';
 
-const Profile: NextPage = () => {
-  return (
-    <>
-      <ProfileTop />
-    </>
-  );
+const ProfilePage: NextPage = () => {
+  return <Profile />;
 };
 
-export default Profile;
+export default ProfilePage;

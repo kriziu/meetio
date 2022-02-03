@@ -8,6 +8,10 @@ export const TopContainer = styled.div`
   transform: translateX(-50%);
   z-index: 9;
 
+  input {
+    z-index: 9;
+  }
+
   svg {
     position: absolute;
     right: 1.5rem;

@@ -1,9 +1,13 @@
 import styled from '@emotion/styled';
 import { Flex } from 'common/components/Flex';
 
-export const Center = styled(Flex)`
+export const Center = styled(Flex)<{ height: number; visible: boolean }>`
   margin-top: 5rem;
   flex-direction: column;
+  height: ${({ height }) => `calc(${height}px - 20rem)`};
+  justify-content: flex-start;
+
+  ${({ visible }) => !visible && 'pointer-events: none;'}
 
   h1 {
     margin-top: 2rem;
@@ -21,8 +25,8 @@ export const Center = styled(Flex)`
   }
 
   .bottom {
-    position: absolute;
+    flex: 1;
     flex-direction: column;
-    bottom: 5rem;
+    justify-content: flex-end;
   }
 `;
