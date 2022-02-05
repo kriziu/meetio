@@ -34,4 +34,15 @@ export declare global {
       yes: boolean;
     };
   }
+
+  interface PostType {
+    _id: string;
+    author: UserType;
+    isPublic: boolean;
+    content: string;
+    imageURLs: string[];
+    likes: number;
+    commentsCount: number;
+    comments: PostType[];
+  }
 }

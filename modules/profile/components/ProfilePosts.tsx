@@ -13,13 +13,15 @@ import {
   animateProfilePosts,
 } from '../animations/ProfilePosts.animations';
 import { PostsContainer } from '../styles/ProfilePosts.elements';
+import Post, { defaultPost } from 'common/components/Post/components/Post';
 
 interface Props {
   topVisible: boolean;
   setTopVisible: Dispatch<SetStateAction<boolean>>;
+  user: UserType;
 }
 
-const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
+const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
   const [, height] = useWindowSize();
 
   const listRef = useRef<HTMLUListElement>(null);
@@ -38,7 +40,6 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
       variants={animateProfilePosts}
       animate={topVisible ? 'visible' : 'hidden'}
       custom={height}
-      style={{ height: '100vh' }}
       {...handlers}
       onWheel={e => {
         const current = listRef.current;
@@ -46,8 +47,10 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
 
         if (e.deltaY < 0 && current.scrollTop <= 0) setTopVisible(true);
       }}
+      height={height}
+      visible={topVisible}
     >
-      <Flex>
+      <Flex className="icon">
         <Header3 onClick={() => setTopVisible(prev => !prev)}>
           {topVisible ? 'See user post' : 'See user profile'}
         </Header3>
@@ -55,57 +58,8 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
           <BsChevronDown />
         </motion.div>
       </Flex>
-      <ul ref={listRef} style={{ height: '20rem', overflow: 'scroll' }}>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>7</li>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>7</li>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>7</li>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>7</li>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>7</li>
+      <ul ref={listRef}>
+        <Post {...defaultPost} author={user} />
       </ul>
     </PostsContainer>
   );

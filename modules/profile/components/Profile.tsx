@@ -60,7 +60,11 @@ const Profile: FC = () => {
         setTopVisible={setTopVisible}
         topVisible={topVisible}
       />
-      <ProfilePosts setTopVisible={setTopVisible} topVisible={topVisible} />
+      <ProfilePosts
+        setTopVisible={setTopVisible}
+        topVisible={topVisible}
+        user={user}
+      />
     </>
   );
 };

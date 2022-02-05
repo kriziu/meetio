@@ -56,12 +56,12 @@ export const AvatarVerySmall: FC<{
   onClick?: () => void;
 }> = ({ imageURL, onClick }) => {
   return (
-    <Container size={30} onClick={onClick}>
+    <Container size={35} onClick={onClick}>
       {imageURL && imageURL !== '-1' && (
         <StyledImage
           src={imageURL}
-          width={30}
-          height={30}
+          width={35}
+          height={35}
           alt="Avatar"
           objectFit="cover"
         />
