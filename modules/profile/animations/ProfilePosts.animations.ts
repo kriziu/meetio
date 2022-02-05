@@ -6,3 +6,13 @@ export const animateProfilePosts = {
     y: -height + 150,
   }),
 };
+
+export const animateIcon = {
+  visible: {
+    y: 0,
+  },
+  hidden: {
+    y: -50,
+    rotate: 180,
+  },
+};

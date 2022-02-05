@@ -30,6 +30,7 @@ export const BigSpinner: FC<{ loading: boolean }> = ({ loading }) => {
         height: '100vh',
         position: 'absolute',
         width: '100vw',
+        left: 0,
         top: 0,
         backgroundColor: 'black',
         opacity: loading ? 0.3 : 0,

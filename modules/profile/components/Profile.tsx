@@ -26,10 +26,13 @@ const Profile: FC = () => {
     setTopVisible(true);
     if (me._id === userId) {
       setUser(me);
+      setLoading(false);
       return;
     }
 
     setLoading(true);
+
+    console.log(userId);
 
     userId &&
       axios.get(`/api/user/${userId}`).then(res => {

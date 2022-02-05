@@ -8,7 +8,11 @@ import useWindowSize from 'common/hooks/useWindowSize';
 
 import { Flex } from 'common/components/Flex';
 import { Header3 } from 'common/components/Headers';
-import { animateProfilePosts } from '../animations/ProfilePosts.animations';
+import {
+  animateIcon,
+  animateProfilePosts,
+} from '../animations/ProfilePosts.animations';
+import { PostsContainer } from '../styles/ProfilePosts.elements';
 
 interface Props {
   topVisible: boolean;
@@ -30,7 +34,7 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
   });
 
   return (
-    <motion.div
+    <PostsContainer
       variants={animateProfilePosts}
       animate={topVisible ? 'visible' : 'hidden'}
       custom={height}
@@ -45,9 +49,11 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
     >
       <Flex>
         <Header3 onClick={() => setTopVisible(prev => !prev)}>
-          See user post
+          {topVisible ? 'See user post' : 'See user profile'}
         </Header3>
-        <BsChevronDown />
+        <motion.div variants={animateIcon}>
+          <BsChevronDown />
+        </motion.div>
       </Flex>
       <ul ref={listRef} style={{ height: '20rem', overflow: 'scroll' }}>
         <li>1</li>
@@ -101,7 +107,7 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible }) => {
         <li>10</li>
         <li>7</li>
       </ul>
-    </motion.div>
+    </PostsContainer>
   );
 };
 
