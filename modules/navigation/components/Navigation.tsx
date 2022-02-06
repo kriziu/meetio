@@ -38,34 +38,31 @@ const Navigation: FC = () => {
     };
   }, [router.events, router.pathname]);
 
-  console.log(_id);
+  if (!show) return null;
+
   return (
     <>
-      {show && (
-        <>
-          <NavBtn
-            onClick={() => setOpened(!opened)}
-            active={!opened}
-            opened={opened}
-            aria-label="Navigation"
-            tabIndex={0}
-          >
-            <NavBtnIcon opened={opened} />
-          </NavBtn>
-          <MotionNavBackground
-            initial={false}
-            animate={opened ? 'open' : 'closed'}
-            variants={animateBg}
-          >
-            <motion.ul variants={animateList}>
-              <NavigationItem name="For you" linkTo="/" />
-              <NavigationItem name="Profile" linkTo={`/profile/${_id}`} />
-              <NavigationItem name="Friends" linkTo="/friends" />
-              <NavigationItem name="Notifications" linkTo="/notifications" />
-            </motion.ul>
-          </MotionNavBackground>
-        </>
-      )}
+      <NavBtn
+        onClick={() => setOpened(!opened)}
+        active={!opened}
+        opened={opened}
+        aria-label="Navigation"
+        tabIndex={0}
+      >
+        <NavBtnIcon opened={opened} />
+      </NavBtn>
+      <MotionNavBackground
+        initial={false}
+        animate={opened ? 'open' : 'closed'}
+        variants={animateBg}
+      >
+        <motion.ul variants={animateList}>
+          <NavigationItem name="For you" linkTo="/" />
+          <NavigationItem name="Profile" linkTo={`/profile/${_id}`} />
+          <NavigationItem name="Friends" linkTo="/friends" />
+          <NavigationItem name="Notifications" linkTo="/notifications" />
+        </motion.ul>
+      </MotionNavBackground>
     </>
   );
 };

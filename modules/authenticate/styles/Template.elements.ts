@@ -16,10 +16,6 @@ export const PageContainer = styled(Flex)`
     margin-top: 0.5rem;
   }
 
-  .both {
-    justify-content: space-between;
-  }
-
   a {
     text-decoration: underline;
     font-weight: 500;
