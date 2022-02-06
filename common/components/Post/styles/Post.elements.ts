@@ -6,6 +6,9 @@ export const PostContainer = styled(Card)`
   display: flex;
   flex-direction: column;
   margin-bottom: 2rem;
+
+  /* position: absolute;
+  top: 0; */
 `;
 
 export const PostAuthor = styled(Flex)`

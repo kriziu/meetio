@@ -4,17 +4,20 @@ export const Button = styled.button<{
   inputSize?: boolean;
   icon?: boolean;
   width?: string;
+  secondary?: boolean;
 }>`
   border-radius: 3rem;
   font-size: 1.6rem;
   width: ${({ inputSize, width }) =>
     width ? width : inputSize ? '25rem' : '100%'};
   padding: 1rem;
-  font-weight: 700;
+  font-weight: ${({ secondary }) => (!secondary ? 700 : 500)};
   text-aling: center;
 
-  background-color: var(--color-primary);
-  color: var(--color-black);
+  background-color: ${({ secondary }) =>
+    !secondary ? 'var(--color-primary)' : 'rgba(197,197,197,0.15)'};
+  color: ${({ secondary }) =>
+    !secondary ? 'var(--color-black)' : 'var(--color-white)'};
   border: none;
   position: relative;
   z-index: 1;

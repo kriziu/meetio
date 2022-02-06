@@ -7,7 +7,7 @@ export const Header1 = styled.h1`
 `;
 
 export const Header2 = styled.h2`
-  font-size: 2.5rem;
+  font-size: 2.7rem;
   font-weight: 400;
   text-align: center;
 `;
