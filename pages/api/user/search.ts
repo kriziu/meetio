@@ -31,18 +31,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
       .select('-email');
 
-    users = users.filter(
-      (
-        user: Document<any, any, UserType> &
-          UserType & {
-            _id: string;
-          }
-      ) => {
-        return _id !== user._id.toString();
-      }
-    );
+    users = users.filter((user: Document<any, any, UserType> & UserType) => {
+      return _id.equals(user._id);
+    });
 
-    if (userWithEmail && userWithEmail._id.toString() !== _id)
+    if (userWithEmail && _id.equals(userWithEmail._id))
       return res.json([userWithEmail]);
 
     return res.json(users);
