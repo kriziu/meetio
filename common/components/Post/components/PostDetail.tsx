@@ -1,4 +1,7 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useRef, useState, WheelEvent } from 'react';
+
+import { AnimatePresence } from 'framer-motion';
+import { useSwipeable } from 'react-swipeable';
 
 import Portal from 'common/components/Portal';
 import { Comments, CustomBackground } from '../styles/PostDetails.elements';
@@ -7,9 +10,11 @@ import { Flex } from 'common/components/Flex';
 import Post from './Post';
 import { Header3 } from 'common/components/Headers';
 import Comment from './Comment';
-import { AnimatePresence, motion } from 'framer-motion';
-import { animatePost } from '../animations/PostDetail.animations';
-import { useSwipeable } from 'react-swipeable';
+import {
+  animateDetails,
+  animatePost,
+} from '../animations/PostDetail.animations';
+import { PostContainer } from '../styles/PostDetails.elements';
 
 interface Props extends PostType {
   closeDetail: () => void;
@@ -18,15 +23,17 @@ interface Props extends PostType {
 
 const PostDetail: FC<Props> = props => {
   const listRef = useRef<HTMLUListElement>(null);
+  const postContentRef = useRef<HTMLDivElement>(null);
 
   const [selectedComment, setSelectedComment] = useState(-1);
   const [showComments, setShowComments] = useState(false);
+  const [allContent, setAllContent] = useState(false);
 
   const key = props._id + '1';
 
   const handlers = useSwipeable({
     onSwipedUp: e => {
-      if (e.absY > 50) setShowComments(true);
+      if (e.absY > 50 && !allContent) setShowComments(true);
     },
     onSwipedDown: e => {
       const current = listRef.current;
@@ -35,6 +42,28 @@ const PostDetail: FC<Props> = props => {
       if (e.absY > 50 && listRef.current.scrollTop <= 0) setShowComments(false);
     },
   });
+
+  const handleWheel = (e: WheelEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    const currentList = listRef.current;
+    const currentContent = postContentRef.current;
+    if (!currentList || !currentContent) return;
+
+    if (e.deltaY < 0 && currentList.scrollTop <= 0) {
+      setShowComments(false);
+      return;
+    }
+
+    if (
+      currentContent.scrollTop + currentContent.clientHeight !==
+        currentContent.scrollHeight &&
+      allContent
+    )
+      return;
+
+    setAllContent(false);
+    setShowComments(true);
+  };
 
   return (
     <>
@@ -51,18 +80,9 @@ const PostDetail: FC<Props> = props => {
       </AnimatePresence>
       <Portal>
         <CustomBackground
-          initial={{ y: -500, opacity: 0 }}
-          transition={{
-            type: 'spring',
-            duration: 0.5,
-            bounce: 0.4,
-          }}
-          animate={
-            selectedComment === -1
-              ? { y: 0, opacity: 1 }
-              : { y: 500, opacity: 0 }
-          }
-          exit={{ y: 500, opacity: 0 }}
+          onWheel={handleWheel}
+          animate={selectedComment === -1 ? 'shown' : 'hidden'}
+          {...animateDetails}
           key={key}
           {...handlers}
         >
@@ -70,17 +90,26 @@ const PostDetail: FC<Props> = props => {
             <Button onClick={props.closeDetail}>Back</Button>
           </Flex>
 
-          <motion.div
+          <PostContainer
             variants={animatePost}
-            animate={showComments ? 'hide' : 'show'}
+            animate={allContent ? 'content' : showComments ? 'hide' : 'show'}
+            onClick={() => setAllContent(prev => !prev)}
           >
-            <Post {...props} dontOpen comment={props.comment} />
-          </motion.div>
+            <Post
+              {...props}
+              dontOpen
+              inDetails
+              comment={props.comment}
+              setAllContent={allContent}
+              postContentRef={postContentRef}
+            />
+          </PostContainer>
 
           <Comments onClick={() => setSelectedComment(1)}>
             <Header3
               onClick={e => {
                 e.stopPropagation();
+                setAllContent(false);
                 setShowComments(!showComments);
               }}
             >

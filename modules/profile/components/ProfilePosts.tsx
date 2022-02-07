@@ -59,7 +59,11 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
         </motion.div>
       </Flex>
       <ul ref={listRef}>
-        <Post {...defaultPost} author={user} />
+        <Post
+          {...defaultPost}
+          author={user}
+          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae."
+        />
       </ul>
     </PostsContainer>
   );

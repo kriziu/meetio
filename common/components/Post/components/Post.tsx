@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, RefObject, useState } from 'react';
 
 import { AiFillHeart } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
@@ -28,6 +28,9 @@ export const defaultPost = {
 interface Props extends PostType {
   dontOpen?: boolean;
   comment?: boolean;
+  inDetails?: boolean;
+  setAllContent?: boolean;
+  postContentRef?: RefObject<HTMLDivElement>;
 }
 
 const Post: FC<Props> = props => {
@@ -41,6 +44,9 @@ const Post: FC<Props> = props => {
     comments,
     comment,
     dontOpen,
+    inDetails,
+    setAllContent,
+    postContentRef,
   } = props;
 
   const [details, setDetails] = useState(false);
@@ -53,7 +59,11 @@ const Post: FC<Props> = props => {
         )}
       </AnimatePresence>
 
-      <PostContainer as="li" onClick={() => !dontOpen && setDetails(!details)}>
+      <PostContainer
+        as="li"
+        inDetails={inDetails}
+        onClick={() => !dontOpen && setDetails(!details)}
+      >
         <PostAuthor>
           <AvatarVerySmall imageURL={author.imageURL} />
           <div>
@@ -61,7 +71,13 @@ const Post: FC<Props> = props => {
             {!comment && <Header5>{isPublic ? 'Public' : 'Friends'}</Header5>}
           </div>
         </PostAuthor>
-        <PostContent>{content}</PostContent>
+        <PostContent
+          inDetails={inDetails}
+          setAllContent={setAllContent}
+          ref={postContentRef}
+        >
+          {content}
+        </PostContent>
         <PostDetails>
           <span className="heart">
             <AiFillHeart /> {likes}

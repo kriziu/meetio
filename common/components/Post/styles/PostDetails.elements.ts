@@ -3,6 +3,12 @@ import { Background } from 'common/components/Background';
 import { Card } from 'common/components/Card';
 import { motion } from 'framer-motion';
 
+export const PostContainer = motion(styled.div`
+  height: 25rem;
+  margin-bottom: 2rem;
+  max-height: 80vh;
+`);
+
 export const CustomBackground = motion(styled(Background)`
   z-index: 100;
   background-color: rgba(0, 0, 0, 0.3);
