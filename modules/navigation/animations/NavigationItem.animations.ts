@@ -3,7 +3,7 @@ export const animateItem = {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 0.7,
+      duration: 0.5,
       bounce: 0.4,
       type: 'spring',
     },

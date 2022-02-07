@@ -3,17 +3,14 @@ export const animateBg = {
     clipPath: `circle(200% at calc(100vw - 4.5rem) 4.5rem)`,
     transition: {
       type: 'spring',
-      stiffness: 50,
-      restDelta: 2,
+      duration: 1,
     },
   },
   closed: {
     clipPath: 'circle(1rem at calc(100vw - 4.5rem) 4.5rem)',
     transition: {
-      delay: 0.2,
       type: 'spring',
-      stiffness: 400,
-      damping: 40,
+      duration: 1,
     },
   },
 };

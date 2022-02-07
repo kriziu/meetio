@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const CommentContainer = styled.div`
+export const CommentContainer = styled.li`
   margin-top: 2rem;
   padding: 0 2rem;
 `;

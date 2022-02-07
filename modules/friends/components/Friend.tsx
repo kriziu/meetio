@@ -6,12 +6,12 @@ import { Header3 } from 'common/components/Headers';
 import { Buttons, FriendInfo } from '../styles/Friend.elements';
 import { Button } from 'common/components/Button';
 
-const Friend: FC = () => {
+const Friend: FC<UserType> = ({ imageURL, fName, lName }) => {
   return (
     <Card>
       <FriendInfo>
-        <AvatarSmall imageURL="-1" />
-        <Header3>Bruno Dzięcielski</Header3>
+        <AvatarSmall imageURL={imageURL} />
+        <Header3>{fName + ' ' + lName}</Header3>
       </FriendInfo>
       <Buttons>
         <Button>Chatio</Button>

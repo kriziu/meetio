@@ -46,7 +46,7 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
       <Header5>Followed by 0 people</Header5>
       <Flex className="buttons">
         <Button>Add friend</Button>
-        <Button>Follow</Button>
+        <Button secondary>Follow</Button>
       </Flex>
     </MotionCenter>
   );

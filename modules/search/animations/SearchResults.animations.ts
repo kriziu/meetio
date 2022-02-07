@@ -5,6 +5,8 @@ export const animateContainer = {
     opacity: 1,
     transition: {
       type: 'spring',
+      duration: 0.7,
+      bounce: 0.4,
     },
   },
   closed: {
@@ -12,7 +14,7 @@ export const animateContainer = {
     padding: 0,
     opacity: 0,
     transition: {
-      duration: 0.5,
+      duration: 0.3,
     },
   },
 };

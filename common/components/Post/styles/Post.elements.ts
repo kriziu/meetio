@@ -30,7 +30,7 @@ export const PostContent = styled.p`
   margin-top: 1rem;
 `;
 
-export const PostDetails = styled(Flex)<{ liked: boolean }>`
+export const PostDetails = styled(Flex)<{ liked?: boolean }>`
   justify-content: flex-start;
   height: 3rem;
 

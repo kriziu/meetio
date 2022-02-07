@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { AiFillHeart } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
@@ -11,6 +11,8 @@ import {
   PostContent,
   PostDetails,
 } from '../styles/Post.elements';
+import PostDetail from './PostDetail';
+import { AnimatePresence } from 'framer-motion';
 
 export const defaultPost = {
   _id: '-1',
@@ -23,33 +25,53 @@ export const defaultPost = {
   imageURLs: [],
 };
 
-const Post: FC<PostType> = ({
-  author,
-  content,
-  likes,
-  commentsCount,
-  imageURLs,
-  isPublic,
-}) => {
+interface Props extends PostType {
+  dontOpen?: boolean;
+  comment?: boolean;
+}
+
+const Post: FC<Props> = props => {
+  const {
+    author,
+    content,
+    likes,
+    commentsCount,
+    imageURLs,
+    isPublic,
+    comments,
+    comment,
+    dontOpen,
+  } = props;
+
+  const [details, setDetails] = useState(false);
+
   return (
-    <PostContainer as="li">
-      <PostAuthor>
-        <AvatarVerySmall imageURL={author.imageURL} />
-        <div>
-          <Header4>{author.fName + ' ' + author.lName}</Header4>
-          <Header5>{isPublic ? 'Public' : 'Friends'}</Header5>
-        </div>
-      </PostAuthor>
-      <PostContent>{content}</PostContent>
-      <PostDetails liked={false}>
-        <span className="heart">
-          <AiFillHeart /> {likes}
-        </span>
-        <span>
-          <FaComment /> {commentsCount}
-        </span>
-      </PostDetails>
-    </PostContainer>
+    <>
+      <AnimatePresence>
+        {details && (
+          <PostDetail {...props} closeDetail={() => setDetails(false)} />
+        )}
+      </AnimatePresence>
+
+      <PostContainer as="li" onClick={() => !dontOpen && setDetails(!details)}>
+        <PostAuthor>
+          <AvatarVerySmall imageURL={author.imageURL} />
+          <div>
+            <Header4>{author.fName + ' ' + author.lName}</Header4>
+            {!comment && <Header5>{isPublic ? 'Public' : 'Friends'}</Header5>}
+          </div>
+        </PostAuthor>
+        <PostContent>{content}</PostContent>
+        <PostDetails>
+          <span className="heart">
+            <AiFillHeart /> {likes}
+          </span>
+          <span>
+            <FaComment /> {commentsCount}
+          </span>
+        </PostDetails>
+      </PostContainer>
+    </>
   );
 };
 

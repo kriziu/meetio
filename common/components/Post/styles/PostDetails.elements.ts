@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { Background } from 'common/components/Background';
 import { Card } from 'common/components/Card';
+import { motion } from 'framer-motion';
 
-export const CustomBackground = styled(Background)`
+export const CustomBackground = motion(styled(Background)`
   z-index: 100;
   background-color: rgba(0, 0, 0, 0.3);
 
@@ -18,9 +19,15 @@ export const CustomBackground = styled(Background)`
     width: 8rem;
     margin-bottom: 2rem;
   }
-`;
+`);
 
 export const Comments = styled(Card)`
   flex: 1;
   overflow: hidden;
+
+  ul {
+    margin-top: 2rem;
+    max-height: 93%;
+    overflow: scroll;
+  }
 `;
