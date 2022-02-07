@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Background } from 'common/components/Background';
 import { Card } from 'common/components/Card';
+import { scrollY } from 'common/styles/scroll';
 import { motion } from 'framer-motion';
 
 export const PostContainer = motion(styled.div`
@@ -34,6 +35,6 @@ export const Comments = styled(Card)`
   ul {
     margin-top: 2rem;
     max-height: 93%;
-    overflow: scroll;
+    ${scrollY}
   }
 `;

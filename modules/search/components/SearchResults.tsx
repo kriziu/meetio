@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react';
 
-import { motion } from 'framer-motion';
 import axios from 'axios';
 
 import { useSpinner } from 'common/hooks/useSpinner';
@@ -9,8 +8,6 @@ import { ResultsContainer } from '../styles/SearchResults.elements';
 import { Header2 } from 'common/components/Headers';
 import { animateContainer } from '../animations/SearchResults.animations';
 import SearchList from './SearchList';
-
-const MotionContainer = motion(ResultsContainer);
 
 let timeout: NodeJS.Timeout;
 
@@ -41,15 +38,16 @@ const SearchResults: FC<Props> = ({ search }) => {
   }, [search, setLoading]);
 
   return (
-    <MotionContainer
+    <ResultsContainer
       initial={false}
       animate={search ? 'open' : 'closed'}
       variants={animateContainer}
+      shown={!!search}
     >
       <Header2>Search results</Header2>
       <Spinner />
       {!loading && <SearchList users={results} />}
-    </MotionContainer>
+    </ResultsContainer>
   );
 };
 
