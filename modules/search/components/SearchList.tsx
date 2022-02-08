@@ -1,7 +1,9 @@
 import { FC } from 'react';
 
-import { AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+
 import SearchUser from './SearchUser';
+import { animateList } from 'common/animations/list.animations';
 
 interface Props {
   users: FetchedUserType[];
@@ -9,13 +11,11 @@ interface Props {
 
 const SearchList: FC<Props> = ({ users }) => {
   return (
-    <AnimatePresence>
-      <ul>
-        {users.map(user => {
-          return <SearchUser user={user} key={user._id} />;
-        })}
-      </ul>
-    </AnimatePresence>
+    <motion.ul variants={animateList} initial="hidden" animate="show">
+      {users.map(user => {
+        return <SearchUser user={user} key={user._id} />;
+      })}
+    </motion.ul>
   );
 };
 

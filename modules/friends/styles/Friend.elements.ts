@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { Card } from 'common/components/Card';
 import { Flex } from 'common/components/Flex';
+import { motion } from 'framer-motion';
 
-export const StyledCard = styled(Card)`
+export const StyledCard = motion(styled(Card)`
   margin: 2rem 0;
-`;
+`);
 
 export const FriendInfo = styled(Flex)`
   justify-content: flex-start;

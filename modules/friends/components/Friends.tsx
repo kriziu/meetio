@@ -10,6 +10,7 @@ import Friend from './Friend';
 import { SearchFriend, StyledUl } from '../styles/Friends.elements';
 import { Input } from 'common/components/Input';
 import { Button } from 'common/components/Button';
+import { animateList } from 'common/animations/list.animations';
 
 const Friends: FC = () => {
   const [search, setSearch] = useState('');
@@ -31,23 +32,30 @@ const Friends: FC = () => {
         <AiOutlineSearch />
         <Button>Sort</Button>
       </SearchFriend>
-      <StyledUl height={height}>
-        {friends
-          ?.filter(friend => {
-            const term = search.toLowerCase();
+      {friends && (
+        <StyledUl
+          height={height}
+          variants={animateList}
+          initial="hidden"
+          animate="show"
+        >
+          {friends
+            ?.filter(friend => {
+              const term = search.toLowerCase();
 
-            return (
-              friend.fName.toLowerCase() +
-              ' ' +
-              friend.lName.toLowerCase() +
-              ' ' +
-              friend.email.toLowerCase()
-            ).includes(term);
-          })
-          .map(args => {
-            return <Friend {...args} key={args._id} />;
-          })}
-      </StyledUl>
+              return (
+                friend.fName.toLowerCase() +
+                ' ' +
+                friend.lName.toLowerCase() +
+                ' ' +
+                friend.email.toLowerCase()
+              ).includes(term);
+            })
+            .map(args => {
+              return <Friend {...args} key={args._id} />;
+            })}
+        </StyledUl>
+      )}
     </div>
   );
 };

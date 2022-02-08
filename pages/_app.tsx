@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import type { AppProps } from 'next/app';
 
+import { useRouter } from 'next/router';
+import { AnimatePresence, motion } from 'framer-motion';
+
 import UserProvider from 'common/context/userContext';
 
 import { GlobalStyles } from 'common/styles/GlobalStyles';
@@ -10,6 +13,8 @@ import { Background } from 'common/components/Background';
 import Search from 'modules/search/components/Search';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
+  const router = useRouter();
+
   return (
     <UserProvider>
       <GlobalStyles />
@@ -24,7 +29,17 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       <Background />
       <div style={{ padding: '2rem' }}>
         <Search />
-        <Component {...pageProps} />
+        <AnimatePresence exitBeforeEnter>
+          <motion.div
+            key={router.route}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+          >
+            <Component {...pageProps} />
+          </motion.div>
+        </AnimatePresence>
       </div>
     </UserProvider>
   );

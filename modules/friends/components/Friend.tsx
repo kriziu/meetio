@@ -6,6 +6,7 @@ import { AvatarSmall } from 'common/components/Avatars';
 import { Header3 } from 'common/components/Headers';
 import { Buttons, FriendInfo, StyledCard } from '../styles/Friend.elements';
 import { Button } from 'common/components/Button';
+import { animateListItem } from 'common/animations/list.animations';
 
 const Friend: FC<FriendType> = ({
   imageURL,
@@ -15,7 +16,7 @@ const Friend: FC<FriendType> = ({
   _id,
 }) => {
   return (
-    <StyledCard as="li">
+    <StyledCard as="li" variants={animateListItem}>
       <FriendInfo>
         <AvatarSmall imageURL={imageURL} />
         <Header3>{fName + ' ' + lName}</Header3>

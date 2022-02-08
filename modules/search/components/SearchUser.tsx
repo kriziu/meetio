@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Header4 } from 'common/components/Headers';
 import { AvatarSmall } from 'common/components/Avatars';
 import { UserContainer } from '../styles/SearchUser.elements';
+import { animateListItem } from 'common/animations/list.animations';
 
 interface Props {
   user: FetchedUserType;
@@ -13,7 +14,7 @@ interface Props {
 
 const SearchUser: FC<Props> = ({ user }) => {
   return (
-    <motion.li initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+    <motion.li variants={animateListItem}>
       <Link href={`/profile/${user._id}`} passHref>
         <UserContainer as="a">
           <AvatarSmall imageURL={user.imageURL} />

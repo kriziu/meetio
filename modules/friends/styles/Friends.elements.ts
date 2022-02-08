@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Flex } from 'common/components/Flex';
 import { scrollY } from 'common/styles/scroll';
+import { motion } from 'framer-motion';
 
 export const SearchFriend = styled(Flex)`
   justify-content: space-between;
@@ -22,7 +23,7 @@ export const SearchFriend = styled(Flex)`
   }
 `;
 
-export const StyledUl = styled.ul<{ height: number }>`
+export const StyledUl = motion(styled.ul<{ height: number }>`
   height: ${({ height }) => `calc(${height}px - 22rem)`};
   ${scrollY}
-`;
+`);
