@@ -15,6 +15,4 @@ const Home: NextPage = () => {
 export default Home;
 
 // TODO:
-// 1. STRONA DO TWORZENIA POSTA
-// 2. POWIADOMIENIA WIDOK
 // 3. FOR YOU WIDOK

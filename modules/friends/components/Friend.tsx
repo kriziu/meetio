@@ -1,23 +1,40 @@
 import { FC } from 'react';
 
-import { Card } from 'common/components/Card';
+import Link from 'next/link';
+
 import { AvatarSmall } from 'common/components/Avatars';
 import { Header3 } from 'common/components/Headers';
-import { Buttons, FriendInfo } from '../styles/Friend.elements';
+import { Buttons, FriendInfo, StyledCard } from '../styles/Friend.elements';
 import { Button } from 'common/components/Button';
 
-const Friend: FC<UserType> = ({ imageURL, fName, lName }) => {
+const Friend: FC<FriendType> = ({
+  imageURL,
+  fName,
+  lName,
+  connectionId,
+  _id,
+}) => {
   return (
-    <Card>
+    <StyledCard as="li">
       <FriendInfo>
         <AvatarSmall imageURL={imageURL} />
         <Header3>{fName + ' ' + lName}</Header3>
       </FriendInfo>
       <Buttons>
-        <Button>Chatio</Button>
-        <Button secondary>Remove</Button>
+        <Link
+          href={`https://chatio-eta.vercel.app/chat/${connectionId}`}
+          passHref
+        >
+          <Button as="a">Chatio</Button>
+        </Link>
+
+        <Link passHref href={`/profile/${_id}`}>
+          <Button secondary as="a">
+            Profile
+          </Button>
+        </Link>
       </Buttons>
-    </Card>
+    </StyledCard>
   );
 };
 

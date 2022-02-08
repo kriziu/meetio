@@ -7,12 +7,4 @@ export const Card = styled.div`
 
   padding: 2rem;
   border-radius: 3rem;
-
-  textarea {
-    width: 100%;
-    height: 25rem;
-    background: none;
-
-    /* ${scrollY} */
-  }
 `;

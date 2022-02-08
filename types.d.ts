@@ -15,6 +15,10 @@ export declare global {
     inviteId: string;
   }
 
+  interface FriendType extends UserType {
+    connectionId: string;
+  }
+
   interface InviteType {
     _id: string;
     from: string;
@@ -44,5 +48,13 @@ export declare global {
     likes: number;
     commentsCount: number;
     comments: PostType[];
+  }
+
+  interface NotificationType {
+    _id: string;
+    date: Date;
+    type: 'like' | 'mention' | 'reply' | 'comment';
+    who: UserType;
+    to: UserType;
   }
 }
