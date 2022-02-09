@@ -43,7 +43,7 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
 
   const handleAddFriend = () => {
     promiseToast(
-      axios.post('/api/invite', { to: user._id }),
+      axios.post('/api/invite', { to: user._id }).then(refetchAll),
       'Sending invite...',
       'Invite sent!'
     );
@@ -51,9 +51,9 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
 
   const handleDeleteFriend = () => {
     promiseToast(
-      /* axios.post('/api/invite', { to: user._id }) */ new Promise(resolve =>
-        setTimeout(resolve, 1500)
-      ),
+      /* axios.post('/api/profile/friend', { to: user._id }) */ new Promise(
+        resolve => setTimeout(resolve, 1500)
+      ).then(refetchAll),
       'Removing from friends...',
       'Removed!'
     );

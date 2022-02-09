@@ -16,8 +16,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (await bcrypt.compare(password, user.password)) {
-      const { fName, lName, _id, email, imageURL } = user;
-      const token = generateRefresh({ fName, lName, _id, email, imageURL });
+      const { fName, lName, _id, email, imageURL, followed } = user;
+      const token = generateRefresh({
+        fName,
+        lName,
+        _id,
+        email,
+        imageURL,
+        followed,
+      });
 
       return res
         .setHeader(
