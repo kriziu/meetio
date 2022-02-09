@@ -8,6 +8,9 @@ const Home: NextPage = () => {
       <Link href="/create">
         <a>create</a>
       </Link>
+      <Link href="/invites">
+        <a>invites</a>
+      </Link>
     </div>
   );
 };

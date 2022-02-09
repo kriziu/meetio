@@ -1,37 +1,42 @@
 import { FC, useEffect, useState } from 'react';
 
 import axios from 'axios';
-import { AiOutlineSearch } from 'react-icons/ai';
+import useSWR from 'swr';
 
 import useWindowSize from 'common/hooks/useWindowSize';
 
 import { Header1 } from 'common/components/Headers';
 import Friend from './Friend';
-import { SearchFriend, StyledUl } from '../styles/Friends.elements';
-import { Input } from 'common/components/Input';
-import { Button } from 'common/components/Button';
+import { StyledUl } from '../styles/Friends.elements';
 import { animateList } from 'common/animations/list.animations';
+import SearchList from 'common/components/SearchList/SearchList';
+import { filterUser } from 'common/lib/filterUser';
+
+const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
 const Friends: FC = () => {
+  const [, height] = useWindowSize();
+
   const [search, setSearch] = useState('');
   const [friends, setFriends] = useState<FriendType[]>();
 
-  const [, height] = useWindowSize();
+  const { data } = useSWR<FriendType[]>('/api/profile/friends', fetcher);
 
   useEffect(() => {
-    axios
-      .get<FriendType[]>('/api/profile/friends')
-      .then(res => setFriends(res.data));
-  }, []);
+    if (!data) return;
+
+    setFriends(data);
+  }, [data]);
 
   return (
     <div>
       <Header1>Friends</Header1>
-      <SearchFriend>
-        <Input value={search} onChange={e => setSearch(e.target.value)} />
-        <AiOutlineSearch />
-        <Button>Sort</Button>
-      </SearchFriend>
+      <SearchList
+        input={search}
+        handleInputChange={e => setSearch(e.target.value)}
+        sort="A"
+        handleSortChange={() => {}}
+      />
       {friends && (
         <StyledUl
           height={height}
@@ -40,17 +45,7 @@ const Friends: FC = () => {
           animate="show"
         >
           {friends
-            ?.filter(friend => {
-              const term = search.toLowerCase();
-
-              return (
-                friend.fName.toLowerCase() +
-                ' ' +
-                friend.lName.toLowerCase() +
-                ' ' +
-                friend.email.toLowerCase()
-              ).includes(term);
-            })
+            ?.filter(friend => filterUser(friend, search))
             .map(args => {
               return <Friend {...args} key={args._id} />;
             })}

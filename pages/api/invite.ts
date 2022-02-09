@@ -5,6 +5,7 @@ import inviteModel from 'backend/models/invite.model';
 import connectionModel from 'backend/models/connection.model';
 import getUserId from 'backend/middlewares/getUserId';
 import userModel from 'backend/models/user.model';
+import messageModel from 'backend/models/message.model';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -15,16 +16,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
       case 'GET':
-        const your = req.query['your'];
+        const invites = await inviteModel
+          .find({ $or: [{ from: _id }, { to: _id }] })
+          .populate({ path: 'to from', model: userModel });
 
-        if (your) {
-          const invites = await inviteModel.find({ from: _id });
-          return res.json(invites);
-        }
+        const mine = invites.filter(invite => invite.from._id.equals(_id));
 
-        const invites = await inviteModel.find({ to: _id });
+        const notMine = invites.filter(invite => invite.to._id.equals(_id));
 
-        return res.json(invites);
+        return res.json({ mine, notMine });
+
       case 'POST':
         const { to } = req.body;
 
@@ -40,6 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         await invite.save();
 
         return res.status(201).json(invite);
+
       case 'PATCH':
         if (inviteFound?.to.equals(_id)) {
           await (
@@ -58,7 +60,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           });
 
+          const newMessage = new messageModel({
+            administrate: true,
+            connectionId: newConnection._id,
+            sender: _id,
+            message: 'created conversation',
+            date: new Date(),
+            read: [_id],
+          });
+
           await newConnection.save();
+          await newMessage.save();
           await inviteFound.delete();
 
           return res.status(201).json(newConnection);

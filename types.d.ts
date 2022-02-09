@@ -10,33 +10,15 @@ export declare global {
     email: string;
   }
 
-  interface UserInvited extends UserType {
-    inviteDate: Date;
-    inviteId: string;
-  }
-
   interface FriendType extends UserType {
     connectionId: string;
   }
 
   interface InviteType {
     _id: string;
-    from: string;
-    to: string;
+    from: UserType;
+    to: UserType;
     date: Date;
-  }
-
-  interface CConnectionType {
-    _id: string;
-    imageURL?: string;
-    name?: string;
-    admins?: UserType[];
-    users: UserType[];
-    group: boolean;
-    blocked: {
-      by: string | null;
-      yes: boolean;
-    };
   }
 
   interface PostType {
@@ -56,5 +38,19 @@ export declare global {
     type: 'like' | 'mention' | 'reply' | 'comment';
     who: UserType;
     to: UserType;
+  }
+
+  // BACKEND
+  interface CConnectionType {
+    _id: string;
+    imageURL?: string;
+    name?: string;
+    admins?: UserType[];
+    users: UserType[];
+    group: boolean;
+    blocked: {
+      by: string | null;
+      yes: boolean;
+    };
   }
 }

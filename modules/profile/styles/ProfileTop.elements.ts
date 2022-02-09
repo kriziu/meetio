@@ -19,7 +19,9 @@ export const Center = styled(Flex)<{ height: number; visible: boolean }>`
     justify-content: space-around;
     margin-top: 1.5rem;
 
-    button {
+    button,
+    a {
+      text-align: center;
       width: 45%;
     }
   }
