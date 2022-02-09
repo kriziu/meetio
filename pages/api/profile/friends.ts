@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       .find({ users: _id, group: false })
       .populate({ path: 'users', model: userModel });
 
-    const friends: FriendType[] = connections.map(connection => {
+    const friends = connections.map(connection => {
       const user = connection.users.filter(
         user => !user._id.equals(_id)
       )[0] as unknown as UserType;

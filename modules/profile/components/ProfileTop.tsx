@@ -2,8 +2,11 @@ import { Dispatch, FC, SetStateAction, useContext } from 'react';
 
 import { useSwipeable } from 'react-swipeable';
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import Link from 'next/link';
 
 import { userContext } from 'common/context/userContext';
+import { storeContext } from 'common/context/storeContext';
 
 import { Avatar } from 'common/components/Avatars';
 import { Center } from '../styles/ProfileTop.elements';
@@ -12,7 +15,7 @@ import { Button } from 'common/components/Button';
 import { Flex } from 'common/components/Flex';
 import useWindowSize from 'common/hooks/useWindowSize';
 import { animateProfileTop } from '../animations/ProfileTop.animations';
-import Link from 'next/link';
+import { promiseToast } from 'common/lib/toasts';
 
 const MotionCenter = motion(Center);
 
@@ -26,8 +29,9 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
   const {
     user: { _id },
   } = useContext(userContext);
-
   const me = user._id === _id;
+
+  const { friends, mineFollowers, refetchAll } = useContext(storeContext);
 
   const [, height] = useWindowSize();
 
@@ -36,6 +40,29 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
       if (e.absY > 50) setTopVisible(false);
     },
   });
+
+  const handleAddFriend = () => {
+    promiseToast(
+      axios.post('/api/invite', { to: user._id }),
+      'Sending invite...',
+      'Invite sent!'
+    );
+  };
+
+  const handleDeleteFriend = () => {
+    promiseToast(
+      /* axios.post('/api/invite', { to: user._id }) */ new Promise(resolve =>
+        setTimeout(resolve, 1500)
+      ),
+      'Removing from friends...',
+      'Removed!'
+    );
+  };
+
+  const isFriend = friends.map(friend => friend._id).includes(user._id);
+  const isFollowed = mineFollowers
+    .map(follower => follower._id)
+    .includes(user._id);
 
   return (
     <MotionCenter
@@ -52,7 +79,7 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
       <Header1>
         {user.fName} {user.lName}
       </Header1>
-      <Header5>Followed by 0 people</Header5>
+      <Header5>Followed by {!user.followed ? 0 : user.followed} people</Header5>
       <Flex className="buttons">
         {me && (
           <>
@@ -70,8 +97,11 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
 
         {!me && (
           <>
-            <Button>Add friend</Button>
-            <Button secondary>Follow</Button>
+            {isFriend && <Button onClick={handleDeleteFriend}>Remove</Button>}
+            {!isFriend && <Button onClick={handleAddFriend}>Add friend</Button>}
+
+            {isFollowed && <Button secondary>Unfollow</Button>}
+            {!isFollowed && <Button secondary>Follow</Button>}
           </>
         )}
       </Flex>

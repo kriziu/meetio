@@ -47,4 +47,9 @@ export const Button = styled.button<{
     height: 2.3rem;
     mix-blend-mode: overlay;
   }
+
+  :disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;

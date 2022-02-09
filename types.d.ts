@@ -4,6 +4,7 @@ export declare global {
     fName: string;
     lName: string;
     imageURL: string;
+    followed: number;
   }
 
   interface UserType extends FetchedUserType {

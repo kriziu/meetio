@@ -1,9 +1,8 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 
 import { motion } from 'framer-motion';
-import axios from 'axios';
-import useSWR from 'swr';
 
+import { storeContext } from 'common/context/storeContext';
 import useWindowSize from 'common/hooks/useWindowSize';
 
 import Invite from './Invite';
@@ -12,8 +11,6 @@ import { Header2 } from 'common/components/Headers';
 import { InvitesContainer } from '../styles/Invites.elements';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
-
-const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
 const searchInvite = (invite: InviteType, search: string, mine = false) => {
   if (mine) {
@@ -28,28 +25,11 @@ const searchInvite = (invite: InviteType, search: string, mine = false) => {
 };
 
 const Invites: FC = () => {
+  const { invites, mineInvites } = useContext(storeContext);
+
   const [, height] = useWindowSize();
 
   const [search, setSearch] = useState('');
-  const [invites, setInvites] = useState<InviteType[]>([]);
-  const [mineInvites, setMineInvites] = useState<InviteType[]>([]);
-
-  const { data } = useSWR<{ mine: InviteType[]; notMine: InviteType[] }>(
-    '/api/invite',
-    fetcher
-  );
-
-  useEffect(() => {
-    if (!data) return;
-
-    setInvites(data.notMine);
-    setMineInvites(data.mine);
-  }, [data]);
-
-  const deleteInvite = (inviteId: string) => {
-    setInvites(prev => prev.filter(invite => invite._id !== inviteId));
-    setMineInvites(prev => prev.filter(invite => invite._id !== inviteId));
-  };
 
   return (
     <InvitesContainer height={height}>
@@ -64,7 +44,7 @@ const Invites: FC = () => {
         {invites
           .filter(invite => searchInvite(invite, search))
           .map(invite => (
-            <Invite {...invite} key={invite._id} deleteInvite={deleteInvite} />
+            <Invite {...invite} key={invite._id} />
           ))}
       </motion.ul>
       <Header2>Your invites</Header2>
@@ -72,7 +52,7 @@ const Invites: FC = () => {
         {mineInvites
           .filter(invite => searchInvite(invite, search, true))
           .map(invite => (
-            <Invite {...invite} key={invite._id} deleteInvite={deleteInvite} />
+            <Invite {...invite} key={invite._id} />
           ))}
       </motion.ul>
     </InvitesContainer>
