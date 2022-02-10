@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import { userContext } from 'common/context/userContext';
 import { storeContext } from 'common/context/storeContext';
+import { useBigSpinner } from 'common/hooks/useSpinner';
 
 import { Avatar } from 'common/components/Avatars';
 import { Center } from '../styles/ProfileTop.elements';
@@ -23,16 +24,24 @@ interface Props {
   user: UserType;
   topVisible: boolean;
   setTopVisible: Dispatch<SetStateAction<boolean>>;
+  setUser: Dispatch<SetStateAction<UserType>>;
 }
 
-const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
+const ProfileTop: FC<Props> = ({
+  user,
+  setUser,
+  topVisible,
+  setTopVisible,
+}) => {
   const {
     user: { _id },
   } = useContext(userContext);
   const me = user._id === _id;
 
-  const { friends, mineFollowers, refetchAll } = useContext(storeContext);
+  const { friends, followers, mineFollowers, refetchAll } =
+    useContext(storeContext);
 
+  const [BigSpinner, setLoading] = useBigSpinner();
   const [, height] = useWindowSize();
 
   const handlers = useSwipeable({
@@ -51,61 +60,86 @@ const ProfileTop: FC<Props> = ({ user, topVisible, setTopVisible }) => {
 
   const handleDeleteFriend = () => {
     promiseToast(
-      /* axios.post('/api/profile/friend', { to: user._id }) */ new Promise(
-        resolve => setTimeout(resolve, 1500)
-      ).then(refetchAll),
+      axios
+        .delete('/api/profile/friends', { data: { friendId: user._id } })
+        .then(refetchAll),
       'Removing from friends...',
       'Removed!'
     );
   };
 
+  const handleFollow = () => {
+    setLoading(true);
+    axios.post<UserType>('/api/follow', { who: user._id }).then(res => {
+      setUser(res.data);
+      refetchAll();
+      setLoading(false);
+    });
+  };
+
   const isFriend = friends.map(friend => friend._id).includes(user._id);
-  const isFollowed = mineFollowers
-    .map(follower => follower._id)
-    .includes(user._id);
+  const isFollowed = followers.map(follower => follower._id).includes(user._id);
 
   return (
-    <MotionCenter
-      height={height}
-      variants={animateProfileTop}
-      animate={topVisible ? 'visible' : 'hidden'}
-      visible={topVisible}
-      {...handlers}
-      onWheel={e => {
-        if (e.deltaY > 0) setTopVisible(false);
-      }}
-    >
-      <Avatar imageURL={user.imageURL} />
-      <Header1>
-        {user.fName} {user.lName}
-      </Header1>
-      <Header5>Followed by {!user.followed ? 0 : user.followed} people</Header5>
-      <Flex className="buttons">
-        {me && (
-          <>
-            <Link href="/friends" passHref>
-              <Button as="a">Friends</Button>
-            </Link>
+    <>
+      <BigSpinner />
+      <MotionCenter
+        height={height}
+        variants={animateProfileTop}
+        animate={topVisible ? 'visible' : 'hidden'}
+        visible={topVisible}
+        {...handlers}
+        onWheel={e => {
+          if (e.deltaY > 0) setTopVisible(false);
+        }}
+      >
+        <Avatar imageURL={user.imageURL} />
+        <Header1>
+          {user.fName} {user.lName}
+        </Header1>
+        <Link href={`/profile/followers/${user._id}`} passHref>
+          <Header5 as="a">
+            Followed by {me ? mineFollowers.length : user.followed} people
+          </Header5>
+        </Link>
 
-            <Link href="/invites" passHref>
-              <Button as="a" secondary>
-                Invites
-              </Button>
-            </Link>
-          </>
-        )}
+        <Flex className="buttons">
+          {me && (
+            <>
+              <Link href="/friends" passHref>
+                <Button as="a">Friends</Button>
+              </Link>
 
-        {!me && (
-          <>
-            {isFriend && <Button onClick={handleDeleteFriend}>Remove</Button>}
-            {!isFriend && <Button onClick={handleAddFriend}>Add friend</Button>}
+              <Link href="/invites" passHref>
+                <Button as="a" secondary>
+                  Invites
+                </Button>
+              </Link>
+            </>
+          )}
 
-            {isFollowed && <Button secondary>Unfollow</Button>}
-            {!isFollowed && <Button secondary>Follow</Button>}
-          </>
-        )}
-      </Flex>
-    </MotionCenter>
+          {!me && (
+            <>
+              {isFriend && <Button onClick={handleDeleteFriend}>Remove</Button>}
+              {!isFriend && (
+                <Button onClick={handleAddFriend}>Add friend</Button>
+              )}
+
+              {isFollowed && (
+                <Button secondary onClick={handleFollow}>
+                  Unfollow
+                </Button>
+              )}
+              {!isFollowed && (
+                <Button secondary onClick={handleFollow}>
+                  Follow
+                </Button>
+              )}
+            </>
+          )}
+        </Flex>
+      </MotionCenter>
+    </>
   );
 };
 

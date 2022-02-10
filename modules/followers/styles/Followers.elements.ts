@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { scrollY } from 'common/styles/scroll';
 
-export const InvitesContainer = styled.div<{ height: number }>`
+export const FollowersContainer = styled.div<{ height: number; me: boolean }>`
   height: ${({ height }) => `calc(${height}px - 10rem)`};
 
   h2 {
@@ -9,7 +9,7 @@ export const InvitesContainer = styled.div<{ height: number }>`
   }
 
   ul {
-    height: 39%;
+    height: ${({ me }) => (me ? 39 : 80)}%;
 
     ${scrollY}
   }

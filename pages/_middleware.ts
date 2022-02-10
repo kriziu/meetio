@@ -48,7 +48,8 @@ export const middleware = async (req: NextRequest, ev: NextFetchEvent) => {
     // if (token.status === 404) return redirect;
 
     const refreshUser = jwt.decode(refresh);
-    const { fName, lName, email, _id, imageURL } = refreshUser as UserType;
+    const { fName, lName, email, _id, imageURL, followed } =
+      refreshUser as UserType;
 
     const newAccess = await jwt.sign(
       {
@@ -57,6 +58,7 @@ export const middleware = async (req: NextRequest, ev: NextFetchEvent) => {
         email,
         _id,
         imageURL,
+        followed,
         exp: Math.round((new Date().getTime() + 15 * 60 * 1000) / 1000),
       },
       process.env.ACCESS_TOKEN_SECRET as string

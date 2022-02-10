@@ -77,8 +77,6 @@ const StoreProvider: FC = ({ children }) => {
     mutate('/api/invite');
   };
 
-  console.log(friends);
-
   return (
     <storeContext.Provider
       value={{

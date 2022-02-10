@@ -45,6 +45,7 @@ const Profile: FC = () => {
     <>
       <ProfileTop
         user={user}
+        setUser={setUser}
         setTopVisible={setTopVisible}
         topVisible={topVisible}
       />

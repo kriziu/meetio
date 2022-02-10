@@ -17,10 +17,13 @@ const Friend: FC<FriendType> = ({
 }) => {
   return (
     <StyledCard as="li" variants={animateListItem}>
-      <FriendInfo>
-        <AvatarSmall imageURL={imageURL} />
-        <Header3>{fName + ' ' + lName}</Header3>
-      </FriendInfo>
+      <Link href={`/profile/${_id}`} passHref>
+        <FriendInfo as="a">
+          <AvatarSmall imageURL={imageURL} />
+          <Header3>{fName + ' ' + lName}</Header3>
+        </FriendInfo>
+      </Link>
+
       <Buttons>
         <Link
           href={`https://chatio-eta.vercel.app/chat/${connectionId}`}

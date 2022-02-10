@@ -18,4 +18,6 @@ const Home: NextPage = () => {
 export default Home;
 
 // TODO:
-// 3. FOR YOU WIDOK
+// 2. TWORZENIE POSTOW
+// 3. SYSTEM POWIADOMIEN
+// 4. KOMENTOWANIE

@@ -12,6 +12,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case 'GET':
+        const { profile, userId } = req.query;
+
+        if (profile && userId) {
+          const followers = await followModel
+            .find({ who: userId })
+            .populate({ path: 'follower', model: userModel });
+
+          if (!followers) return res.status(404).end();
+
+          return res.json(followers.map(follower => follower.follower));
+        }
+
         const followers = await followModel
           .find({ who: _id })
           .populate({ path: 'follower', model: userModel });
@@ -26,24 +38,44 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       case 'POST':
         const userToFollow = await userModel.findById(who);
+        const followToDelete = await followModel.findOne({
+          who,
+          follower: _id,
+        });
 
         if (!userToFollow) return res.status(404).end();
+
+        if (followToDelete) {
+          await userToFollow.updateOne({ followed: userToFollow.followed - 1 });
+          userToFollow.followed--;
+          await followToDelete?.delete();
+
+          return res.json(userToFollow);
+        }
 
         const newFollow = new followModel({
           follower: _id,
           who: userToFollow._id,
         });
 
+        await userToFollow.updateOne({ followed: userToFollow.followed + 1 });
+        userToFollow.followed++;
         await newFollow.save();
 
-        return res.json(newFollow);
+        return res.json(userToFollow);
 
       case 'DELETE':
-        const followToDelete = await followModel.findOne({ who });
+        const me = await userModel.findById(_id);
 
-        await followToDelete?.delete();
+        if (!me) return res.status(404).end();
 
-        return res.json(followToDelete);
+        await me.updateOne({ followed: me.followed - 1 });
+        me.followed--;
+
+        const { followerId } = req.body;
+        await followModel.findOneAndDelete({ who: _id, follower: followerId });
+
+        return res.end();
     }
 
     return res.end();
