@@ -7,7 +7,7 @@ import useWindowSize from 'common/hooks/useWindowSize';
 
 import Invite from './Invite';
 import { animateList } from 'common/animations/list.animations';
-import { Header2 } from 'common/components/Headers';
+import { Header1, Header2 } from 'common/components/Headers';
 import { InvitesContainer } from '../styles/Invites.elements';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
@@ -39,7 +39,7 @@ const Invites: FC = () => {
         sort="A"
         handleSortChange={() => {}}
       />
-      <Header2>Invites</Header2>
+      <Header1>Invites</Header1>
       <motion.ul variants={animateList} initial="hidden" animate="show">
         {invites
           .filter(invite => searchInvite(invite, search))

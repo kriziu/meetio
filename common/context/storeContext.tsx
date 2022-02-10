@@ -4,8 +4,6 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import useSWR, { useSWRConfig } from 'swr';
 
-const fetcher = (url: string) => axios.get(url).then(res => res.data);
-
 export const storeContext = createContext<{
   mineFollowers: UserType[];
   followers: UserType[];
@@ -34,18 +32,13 @@ const StoreProvider: FC = ({ children }) => {
   const [invites, setInvites] = useState<InviteType[]>([]);
 
   const followersData = useSWR<{ mine: UserType[]; notMine: UserType[] }>(
-    access && '/api/follow',
-    fetcher
+    access && '/api/follow'
   );
 
-  const friendsData = useSWR<FriendType[]>(
-    access && '/api/profile/friends',
-    fetcher
-  );
+  const friendsData = useSWR<FriendType[]>(access && '/api/profile/friends');
 
   const invitesData = useSWR<{ mine: InviteType[]; notMine: InviteType[] }>(
-    access && '/api/invite',
-    fetcher
+    access && '/api/invite'
   );
 
   useEffect(() => {

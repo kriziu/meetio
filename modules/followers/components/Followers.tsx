@@ -15,6 +15,7 @@ import { Header2 } from 'common/components/Headers';
 import { FollowersContainer } from '../styles/Followers.elements';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
+import Spinner from 'common/components/Spinner';
 
 const Followers: FC = () => {
   const {
@@ -44,8 +45,10 @@ const Followers: FC = () => {
         sort="A"
         handleSortChange={() => {}}
       />
-      <Header2>Your followers</Header2>
+      <Header2>{me ? 'Your followers' : 'Followers'}</Header2>
       <motion.ul variants={animateList} initial="hidden" animate="show">
+        <Spinner loading={!data} />
+
         {data
           ?.filter(follower => filterUser(follower, search))
           .map(follower => (
@@ -58,6 +61,7 @@ const Followers: FC = () => {
             />
           ))}
       </motion.ul>
+
       {me && (
         <>
           <Header2>You follow</Header2>

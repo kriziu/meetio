@@ -5,7 +5,9 @@ export const UserContainer = styled(Flex)`
   justify-content: flex-start;
   margin-top: 1rem;
 
-  h4 {
+  .info {
     margin-left: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 `;

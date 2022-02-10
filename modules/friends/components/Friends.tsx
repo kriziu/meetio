@@ -1,9 +1,11 @@
 import { FC, useContext, useState } from 'react';
 
+import Link from 'next/link';
+
 import { storeContext } from 'common/context/storeContext';
 import useWindowSize from 'common/hooks/useWindowSize';
 
-import { Header1 } from 'common/components/Headers';
+import { Header1, Header4 } from 'common/components/Headers';
 import Friend from './Friend';
 import { StyledUl } from '../styles/Friends.elements';
 import { animateList } from 'common/animations/list.animations';
@@ -20,6 +22,12 @@ const Friends: FC = () => {
   return (
     <div>
       <Header1>Friends</Header1>
+      <div style={{ textAlign: 'center' }}>
+        <Link href="/invites" passHref>
+          <Header4 as="a">(See invites)</Header4>
+        </Link>
+      </div>
+
       <SearchList
         input={search}
         handleInputChange={e => setSearch(e.target.value)}

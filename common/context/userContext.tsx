@@ -14,8 +14,6 @@ export const defaultUser: UserType = {
   followed: 0,
 };
 
-const fetcher = (url: string) => axios.get(url).then(res => res.data);
-
 export const userContext = createContext<{
   user: UserType;
   setUser: React.Dispatch<React.SetStateAction<UserType>>;
@@ -25,10 +23,7 @@ const UserProvider: FC = ({ children }) => {
   const [user, setUser] = useState<UserType>(defaultUser);
   const access = Cookies.get('ACCESS');
 
-  const { data } = useSWR<{ url: string }>(
-    access && '/api/profile/image',
-    fetcher
-  );
+  const { data } = useSWR<{ url: string }>(access && '/api/profile/image');
 
   useEffect(() => {
     if (access) {
