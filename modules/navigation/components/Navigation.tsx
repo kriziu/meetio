@@ -38,7 +38,7 @@ const Navigation: FC = () => {
     };
   }, [router.events, router.pathname]);
 
-  if (!show) return null;
+  if (!show || !_id) return null;
 
   return (
     <>

@@ -11,6 +11,7 @@ import { Header1, Header2 } from 'common/components/Headers';
 import { InvitesContainer } from '../styles/Invites.elements';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
+import { sortAlph } from 'common/lib/sort';
 
 const searchInvite = (invite: InviteType, search: string, mine = false) => {
   if (mine) {
@@ -43,6 +44,7 @@ const Invites: FC = () => {
       <motion.ul variants={animateList} initial="hidden" animate="show">
         {invites
           .filter(invite => searchInvite(invite, search))
+          .sort((a, b) => sortAlph(a.from, b.from))
           .map(invite => (
             <Invite {...invite} key={invite._id} />
           ))}
@@ -51,6 +53,7 @@ const Invites: FC = () => {
       <motion.ul variants={animateList} initial="hidden" animate="show">
         {mineInvites
           .filter(invite => searchInvite(invite, search, true))
+          .sort((a, b) => sortAlph(a.to, b.to))
           .map(invite => (
             <Invite {...invite} key={invite._id} />
           ))}

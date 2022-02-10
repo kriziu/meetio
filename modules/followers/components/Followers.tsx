@@ -16,6 +16,7 @@ import { FollowersContainer } from '../styles/Followers.elements';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
 import Spinner from 'common/components/Spinner';
+import { sortAlph } from 'common/lib/sort';
 
 const Followers: FC = () => {
   const {
@@ -51,6 +52,7 @@ const Followers: FC = () => {
 
         {data
           ?.filter(follower => filterUser(follower, search))
+          .sort((a, b) => sortAlph(a, b))
           .map(follower => (
             <Follower
               {...follower}
@@ -68,6 +70,7 @@ const Followers: FC = () => {
           <motion.ul variants={animateList} initial="hidden" animate="show">
             {followers
               .filter(follower => filterUser(follower, search))
+              .sort((a, b) => sortAlph(a, b))
               .map(follower => (
                 <Follower
                   {...follower}

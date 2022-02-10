@@ -11,6 +11,7 @@ import { StyledUl } from '../styles/Friends.elements';
 import { animateList } from 'common/animations/list.animations';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
+import { sortAlph } from 'common/lib/sort';
 
 const Friends: FC = () => {
   const { friends } = useContext(storeContext);
@@ -43,6 +44,7 @@ const Friends: FC = () => {
         >
           {friends
             ?.filter(friend => filterUser(friend, search))
+            .sort((a, b) => sortAlph(a, b))
             .map(args => {
               return <Friend {...args} key={args._id} />;
             })}
