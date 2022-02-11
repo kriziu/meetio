@@ -36,7 +36,7 @@ interface Props extends PostType {
   inDetails?: boolean;
   setAllContent?: boolean;
   postContentRef?: RefObject<HTMLDivElement>;
-  mutate: KeyedMutator<PostType[]>;
+  mutate: KeyedMutator<PostType[]> | (() => Promise<any>);
 }
 
 const Post: FC<Props> = props => {
@@ -93,7 +93,6 @@ const Post: FC<Props> = props => {
       </AnimatePresence>
 
       <PostContainer
-        as="li"
         inDetails={inDetails}
         onClick={() => !dontOpen && setDetails(!details)}
       >

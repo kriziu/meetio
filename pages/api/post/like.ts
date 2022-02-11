@@ -4,6 +4,7 @@ import connectDB from 'backend/middlewares/connectDB';
 import getUserId from 'backend/middlewares/getUserId';
 import postModel from 'backend/models/post.model';
 import likeModel from 'backend/models/like.model';
+import userModel from 'backend/models/user.model';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -12,7 +13,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
       const likedPosts = await likeModel
         .find({ liker: _id })
-        .populate({ path: 'postId', model: postModel });
+        .populate({
+          path: 'postId',
+          model: postModel,
+          populate: { path: 'author', model: userModel },
+        });
 
       return res.json(likedPosts.map(liked => liked.postId));
     }

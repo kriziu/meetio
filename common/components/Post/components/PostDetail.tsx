@@ -1,7 +1,7 @@
 import { FC, useRef, useState, WheelEvent } from 'react';
 
 import { KeyedMutator } from 'swr';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 
 import Portal from 'common/components/Portal';
@@ -16,6 +16,10 @@ import {
   animatePost,
 } from '../animations/PostDetail.animations';
 import { PostContainer } from '../styles/PostDetails.elements';
+import {
+  animateList,
+  animateListItem,
+} from 'common/animations/list.animations';
 
 interface Props extends PostType {
   closeDetail: () => void;
@@ -117,12 +121,18 @@ const PostDetail: FC<Props> = props => {
             >
               Comments
             </Header3>
-            <ul ref={listRef}>
-              <Comment {...props} likes={50} />
-              <Comment {...props} />
-              <Comment {...props} />
-              <Comment {...props} />
-            </ul>
+            <motion.ul
+              ref={listRef}
+              variants={animateList}
+              initial="hidden"
+              animate="show"
+            >
+              {props.comments.map(comment => {
+                <motion.li variants={animateListItem} key={comment._id}>
+                  <Comment {...comment} />
+                </motion.li>;
+              })}
+            </motion.ul>
           </Comments>
         </CustomBackground>
       </Portal>

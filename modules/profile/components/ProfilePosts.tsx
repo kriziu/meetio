@@ -4,6 +4,7 @@ import { BsChevronDown } from 'react-icons/bs';
 import { useSwipeable } from 'react-swipeable';
 import { motion } from 'framer-motion';
 import useSWR from 'swr';
+import Link from 'next/link';
 
 import useWindowSize from 'common/hooks/useWindowSize';
 
@@ -15,6 +16,11 @@ import {
 } from '../animations/ProfilePosts.animations';
 import { PostsContainer } from '../styles/ProfilePosts.elements';
 import Post from 'common/components/Post/components/Post';
+import {
+  animateList,
+  animateListItem,
+} from 'common/animations/list.animations';
+import { Button } from 'common/components/Button';
 
 interface Props {
   topVisible: boolean;
@@ -63,11 +69,26 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
           <BsChevronDown />
         </motion.div>
       </Flex>
-      <ul ref={listRef}>
+      {!topVisible && (
+        <Link href="/liked" passHref>
+          <Button as="a">Liked posts</Button>
+        </Link>
+      )}
+
+      <motion.ul
+        ref={listRef}
+        variants={animateList}
+        initial="hidden"
+        animate={topVisible ? 'hidden' : 'show'}
+      >
         {data?.map(post => {
-          return <Post {...post} key={post._id} mutate={mutate} />;
+          return (
+            <motion.li key={post._id} variants={animateListItem}>
+              <Post {...post} mutate={mutate} />
+            </motion.li>
+          );
         })}
-      </ul>
+      </motion.ul>
     </PostsContainer>
   );
 };
