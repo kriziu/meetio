@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Card } from 'common/components/Card';
-import { Flex } from 'common/components/Flex';
 import { motion } from 'framer-motion';
+import { Card } from '../Card';
+import { Flex } from '../Flex';
 
 export const StyledCard = motion(styled(Card)`
   margin: 2rem 0;

@@ -7,11 +7,8 @@ import Link from 'next/link';
 import { storeContext } from 'common/context/storeContext';
 import { loaderContext } from 'common/context/loaderContext';
 
-import { AvatarSmall } from 'common/components/Avatars';
-import { Header3 } from 'common/components/Headers';
-import { Buttons, StyledCard, UserInfo } from '../styles/Follower.elements';
 import { Button } from 'common/components/Button';
-import { animateListItem } from 'common/animations/list.animations';
+import UserCard from 'common/components/UserCard/UserCard';
 
 interface Props extends UserType {
   mutate: KeyedMutator<UserType[]>;
@@ -20,16 +17,9 @@ interface Props extends UserType {
   followedByMe?: boolean;
 }
 
-const Follower: FC<Props> = ({
-  _id,
-  fName,
-  imageURL,
-  lName,
-  me,
-  mine,
-  mutate,
-  followedByMe,
-}) => {
+const Follower: FC<Props> = props => {
+  const { _id, fName, imageURL, lName, me, mine, mutate, followedByMe } = props;
+
   const { refetchAll } = useContext(storeContext);
   const { setLoading } = useContext(loaderContext);
 
@@ -62,28 +52,17 @@ const Follower: FC<Props> = ({
   };
 
   return (
-    <StyledCard as="li" variants={animateListItem}>
+    <UserCard {...props}>
       <Link href={`/profile/${_id}`} passHref>
-        <UserInfo as="a">
-          <AvatarSmall imageURL={imageURL} />
-          <div className="info">
-            <Header3>{fName + ' ' + lName}</Header3>
-          </div>
-        </UserInfo>
+        <Button as="a">Profile</Button>
       </Link>
 
-      <Buttons>
-        <Link href={`/profile/${_id}`} passHref>
-          <Button as="a">Profile</Button>
-        </Link>
-
-        {mine && me && (
-          <Button onClick={handleRemove} secondary>
-            {followedByMe ? 'Unfollow' : 'Remove'}
-          </Button>
-        )}
-      </Buttons>
-    </StyledCard>
+      {mine && me && (
+        <Button onClick={handleRemove} secondary>
+          {followedByMe ? 'Unfollow' : 'Remove'}
+        </Button>
+      )}
+    </UserCard>
   );
 };
 
