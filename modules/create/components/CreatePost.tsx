@@ -1,5 +1,8 @@
 import { FC, useContext, useState } from 'react';
 
+import axios from 'axios';
+import { useRouter } from 'next/router';
+
 import { BsImage } from 'react-icons/bs';
 
 import { userContext } from 'common/context/userContext';
@@ -9,13 +12,31 @@ import { CreateCard, StyledDiv } from '../styles/CreatePost.elements';
 import { Button } from 'common/components/Button';
 import { Flex } from 'common/components/Flex';
 import { AvatarSmall } from 'common/components/Avatars';
+import { promiseToast } from 'common/lib/toasts';
 
 const CreatePost: FC = () => {
   const {
-    user: { fName, lName, imageURL },
+    user: { fName, lName, imageURL, _id },
   } = useContext(userContext);
 
-  const [visibility, setVisibility] = useState('Friends');
+  const [content, setContent] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
+
+  const router = useRouter();
+
+  const handleCreatePost = () => {
+    promiseToast(
+      axios
+        .post<PostType>('/api/post', {
+          isPublic,
+          content,
+          imageURLs: [],
+        })
+        .then(() => router.push(`/profile/${_id}`)),
+      'Creating post...',
+      'Created!'
+    );
+  };
 
   return (
     <StyledDiv>
@@ -27,7 +48,7 @@ const CreatePost: FC = () => {
           <Header4>{fName + ' ' + lName}</Header4>
         </Flex>
 
-        <textarea />
+        <textarea value={content} onChange={e => setContent(e.target.value)} />
         <Flex className="img">
           <Header4>Add images to post</Header4>
           <BsImage />
@@ -36,8 +57,8 @@ const CreatePost: FC = () => {
       <Flex className="visible">
         <Header4>Post visibility</Header4>
         <select
-          value={visibility}
-          onChange={e => setVisibility(e.target.value)}
+          value={isPublic ? 'Public' : 'Friends'}
+          onChange={e => setIsPublic(!isPublic)}
         >
           <option>Friends</option>
           <option>Public</option>
@@ -45,7 +66,7 @@ const CreatePost: FC = () => {
       </Flex>
 
       <Flex>
-        <Button>Create</Button>
+        <Button onClick={handleCreatePost}>Create</Button>
       </Flex>
     </StyledDiv>
   );

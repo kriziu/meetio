@@ -21,7 +21,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           .populate({ path: 'to from', model: userModel });
 
         const mine = invites.filter(invite => invite.from._id.equals(_id));
-
         const notMine = invites.filter(invite => invite.to._id.equals(_id));
 
         return res.json({ mine, notMine });

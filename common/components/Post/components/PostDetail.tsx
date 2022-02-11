@@ -1,5 +1,6 @@
 import { FC, useRef, useState, WheelEvent } from 'react';
 
+import { KeyedMutator } from 'swr';
 import { AnimatePresence } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 
@@ -19,6 +20,7 @@ import { PostContainer } from '../styles/PostDetails.elements';
 interface Props extends PostType {
   closeDetail: () => void;
   comment?: boolean;
+  mutate: KeyedMutator<PostType[]>;
 }
 
 const PostDetail: FC<Props> = props => {

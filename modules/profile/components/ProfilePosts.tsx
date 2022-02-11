@@ -3,6 +3,7 @@ import { Dispatch, FC, SetStateAction, useRef } from 'react';
 import { BsChevronDown } from 'react-icons/bs';
 import { useSwipeable } from 'react-swipeable';
 import { motion } from 'framer-motion';
+import useSWR from 'swr';
 
 import useWindowSize from 'common/hooks/useWindowSize';
 
@@ -13,7 +14,7 @@ import {
   animateProfilePosts,
 } from '../animations/ProfilePosts.animations';
 import { PostsContainer } from '../styles/ProfilePosts.elements';
-import Post, { defaultPost } from 'common/components/Post/components/Post';
+import Post from 'common/components/Post/components/Post';
 
 interface Props {
   topVisible: boolean;
@@ -25,6 +26,10 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
   const [, height] = useWindowSize();
 
   const listRef = useRef<HTMLUListElement>(null);
+
+  const { data, mutate } = useSWR<PostType[]>(
+    user._id && `/api/post?author=${user._id}`
+  );
 
   const handlers = useSwipeable({
     onSwipedDown: e => {
@@ -59,11 +64,9 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
         </motion.div>
       </Flex>
       <ul ref={listRef}>
-        <Post
-          {...defaultPost}
-          author={user}
-          content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae.Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eum alias necessitatibus asperiores natus blanditiis eligendi quis recusandae rerum temporibus, beatae aut quasi assumenda veritatis amet deserunt tenetur enim vitae."
-        />
+        {data?.map(post => {
+          return <Post {...post} key={post._id} mutate={mutate} />;
+        })}
       </ul>
     </PostsContainer>
   );

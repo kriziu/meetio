@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 import { userContext } from 'common/context/userContext';
 import { storeContext } from 'common/context/storeContext';
-import { useBigSpinner } from 'common/hooks/useSpinner';
+import { loaderContext } from 'common/context/loaderContext';
 
 import { Avatar } from 'common/components/Avatars';
 import { Center } from '../styles/ProfileTop.elements';
@@ -40,8 +40,8 @@ const ProfileTop: FC<Props> = ({
 
   const { friends, followers, mineFollowers, refetchAll } =
     useContext(storeContext);
+  const { setLoading } = useContext(loaderContext);
 
-  const [BigSpinner, setLoading] = useBigSpinner();
   const [, height] = useWindowSize();
 
   const handlers = useSwipeable({
@@ -72,8 +72,7 @@ const ProfileTop: FC<Props> = ({
     setLoading(true);
     axios.post<UserType>('/api/follow', { who: user._id }).then(res => {
       setUser(res.data);
-      refetchAll();
-      setLoading(false);
+      refetchAll().then(() => setLoading(false));
     });
   };
 
@@ -81,65 +80,60 @@ const ProfileTop: FC<Props> = ({
   const isFollowed = followers.map(follower => follower._id).includes(user._id);
 
   return (
-    <>
-      <BigSpinner />
-      <MotionCenter
-        height={height}
-        variants={animateProfileTop}
-        animate={topVisible ? 'visible' : 'hidden'}
-        visible={topVisible}
-        {...handlers}
-        onWheel={e => {
-          if (e.deltaY > 0) setTopVisible(false);
-        }}
-      >
-        <Avatar imageURL={user.imageURL} />
-        <Header1>
-          {user.fName} {user.lName}
-        </Header1>
-        <Link href={`/profile/followers/${user._id}`} passHref>
-          <Header5 as="a">
-            Followed by {me ? mineFollowers.length : user.followed} people
-          </Header5>
-        </Link>
+    <MotionCenter
+      height={height}
+      variants={animateProfileTop}
+      animate={topVisible ? 'visible' : 'hidden'}
+      visible={topVisible}
+      {...handlers}
+      onWheel={e => {
+        if (e.deltaY > 0) setTopVisible(false);
+      }}
+    >
+      <Avatar imageURL={user.imageURL} />
+      <Header1>
+        {user.fName} {user.lName}
+      </Header1>
+      <Link href={`/profile/followers/${user._id}`} passHref>
+        <Header5 as="a">
+          Followed by {me ? mineFollowers.length : user.followed} people
+        </Header5>
+      </Link>
 
-        <Flex className="buttons">
-          {me && (
-            <>
-              <Link href="/friends" passHref>
-                <Button as="a">Friends</Button>
-              </Link>
+      <Flex className="buttons">
+        {me && (
+          <>
+            <Link href="/friends" passHref>
+              <Button as="a">Friends</Button>
+            </Link>
 
-              <Link href="/invites" passHref>
-                <Button as="a" secondary>
-                  Invites
-                </Button>
-              </Link>
-            </>
-          )}
+            <Link href="/invites" passHref>
+              <Button as="a" secondary>
+                Invites
+              </Button>
+            </Link>
+          </>
+        )}
 
-          {!me && (
-            <>
-              {isFriend && <Button onClick={handleDeleteFriend}>Remove</Button>}
-              {!isFriend && (
-                <Button onClick={handleAddFriend}>Add friend</Button>
-              )}
+        {!me && (
+          <>
+            {isFriend && <Button onClick={handleDeleteFriend}>Remove</Button>}
+            {!isFriend && <Button onClick={handleAddFriend}>Add friend</Button>}
 
-              {isFollowed && (
-                <Button secondary onClick={handleFollow}>
-                  Unfollow
-                </Button>
-              )}
-              {!isFollowed && (
-                <Button secondary onClick={handleFollow}>
-                  Follow
-                </Button>
-              )}
-            </>
-          )}
-        </Flex>
-      </MotionCenter>
-    </>
+            {isFollowed && (
+              <Button secondary onClick={handleFollow}>
+                Unfollow
+              </Button>
+            )}
+            {!isFollowed && (
+              <Button secondary onClick={handleFollow}>
+                Follow
+              </Button>
+            )}
+          </>
+        )}
+      </Flex>
+    </MotionCenter>
   );
 };
 

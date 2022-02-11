@@ -7,8 +7,7 @@ export const PostContainer = styled(Card)<{ inDetails?: boolean }>`
   display: flex;
   flex-direction: column;
   margin-bottom: 2rem;
-  ${({ inDetails }) => inDetails && 'height: 100%;'}/* position: absolute;
-  top: 0; */
+  ${({ inDetails }) => inDetails && 'max-height: 100%;'};
 `;
 
 export const PostAuthor = styled(Flex)`
@@ -49,6 +48,7 @@ export const PostDetails = styled(Flex)<{ liked?: boolean }>`
     display: flex;
     align-items: center;
     font-weight: 500;
+    cursor: pointer;
 
     svg {
       width: 2rem;

@@ -5,7 +5,7 @@ import { KeyedMutator } from 'swr';
 import Link from 'next/link';
 
 import { storeContext } from 'common/context/storeContext';
-import { useBigSpinner } from 'common/hooks/useSpinner';
+import { loaderContext } from 'common/context/loaderContext';
 
 import { AvatarSmall } from 'common/components/Avatars';
 import { Header3 } from 'common/components/Headers';
@@ -31,15 +31,14 @@ const Follower: FC<Props> = ({
   followedByMe,
 }) => {
   const { refetchAll } = useContext(storeContext);
-
-  const [BigSpinner, setLoading] = useBigSpinner();
+  const { setLoading } = useContext(loaderContext);
 
   const handleRemove = () => {
     setLoading(true);
 
     if (followedByMe) {
       axios.post<UserType>('/api/follow', { who: _id }).then(() => {
-        refetchAll();
+        refetchAll().then(() => setLoading(false));
         setLoading(false);
       });
 
@@ -47,38 +46,44 @@ const Follower: FC<Props> = ({
     }
 
     axios.delete('/api/follow', { data: { followerId: _id } }).then(() => {
-      mutate();
-      refetchAll();
+      new Promise(resolve => {
+        let made = 0;
+
+        const helper = () => {
+          made++;
+          if (made === 2) resolve('success');
+        };
+        mutate().then(helper);
+        refetchAll().then(helper);
+      }).then(() => setLoading(false));
+
       setLoading(false);
     });
   };
 
   return (
-    <>
-      <BigSpinner />
-      <StyledCard as="li" variants={animateListItem}>
+    <StyledCard as="li" variants={animateListItem}>
+      <Link href={`/profile/${_id}`} passHref>
+        <UserInfo as="a">
+          <AvatarSmall imageURL={imageURL} />
+          <div className="info">
+            <Header3>{fName + ' ' + lName}</Header3>
+          </div>
+        </UserInfo>
+      </Link>
+
+      <Buttons>
         <Link href={`/profile/${_id}`} passHref>
-          <UserInfo as="a">
-            <AvatarSmall imageURL={imageURL} />
-            <div className="info">
-              <Header3>{fName + ' ' + lName}</Header3>
-            </div>
-          </UserInfo>
+          <Button as="a">Profile</Button>
         </Link>
 
-        <Buttons>
-          <Link href={`/profile/${_id}`} passHref>
-            <Button as="a">Profile</Button>
-          </Link>
-
-          {mine && me && (
-            <Button onClick={handleRemove} secondary>
-              {followedByMe ? 'Unfollow' : 'Remove'}
-            </Button>
-          )}
-        </Buttons>
-      </StyledCard>
-    </>
+        {mine && me && (
+          <Button onClick={handleRemove} secondary>
+            {followedByMe ? 'Unfollow' : 'Remove'}
+          </Button>
+        )}
+      </Buttons>
+    </StyledCard>
   );
 };
 

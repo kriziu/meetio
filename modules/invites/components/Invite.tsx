@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { storeContext } from 'common/context/storeContext';
 import { userContext } from 'common/context/userContext';
-import { useBigSpinner } from 'common/hooks/useSpinner';
+import { loaderContext } from 'common/context/loaderContext';
 
 import { AvatarSmall } from 'common/components/Avatars';
 import { Header3, Header5 } from 'common/components/Headers';
@@ -17,8 +17,7 @@ import { animateListItem } from 'common/animations/list.animations';
 const Invite: FC<InviteType> = ({ _id, from, to, date }) => {
   const { user } = useContext(userContext);
   const { refetchAll } = useContext(storeContext);
-
-  const [BigSpinner, setLoading] = useBigSpinner();
+  const { setLoading } = useContext(loaderContext);
 
   const mine = user._id === to._id;
 
@@ -27,7 +26,7 @@ const Invite: FC<InviteType> = ({ _id, from, to, date }) => {
   const handleAccept = () => {
     setLoading(true);
     axios.patch('/api/invite', { inviteId: _id }).then(() => {
-      refetchAll();
+      refetchAll().then(() => setLoading(false));
       setLoading(false);
     });
   };
@@ -35,33 +34,30 @@ const Invite: FC<InviteType> = ({ _id, from, to, date }) => {
   const handleRemove = () => {
     setLoading(true);
     axios.delete('/api/invite', { data: { inviteId: _id } }).then(() => {
-      refetchAll();
+      refetchAll().then(() => setLoading(false));
       setLoading(false);
     });
   };
 
   return (
-    <>
-      <BigSpinner />
-      <StyledCard as="li" variants={animateListItem}>
-        <Link href={`/profile/${_id}`} passHref>
-          <UserInfo as="a">
-            <AvatarSmall imageURL={imageURL} />
-            <div className="info">
-              <Header3>{fName + ' ' + lName}</Header3>
-              <Header5>{getDate(new Date(date))}</Header5>
-            </div>
-          </UserInfo>
-        </Link>
+    <StyledCard as="li" variants={animateListItem}>
+      <Link href={`/profile/${_id}`} passHref>
+        <UserInfo as="a">
+          <AvatarSmall imageURL={imageURL} />
+          <div className="info">
+            <Header3>{fName + ' ' + lName}</Header3>
+            <Header5>{getDate(new Date(date))}</Header5>
+          </div>
+        </UserInfo>
+      </Link>
 
-        <Buttons>
-          {mine && <Button onClick={handleAccept}>Accept</Button>}
-          <Button onClick={handleRemove} secondary>
-            Remove
-          </Button>
-        </Buttons>
-      </StyledCard>
-    </>
+      <Buttons>
+        {mine && <Button onClick={handleAccept}>Accept</Button>}
+        <Button onClick={handleRemove} secondary>
+          Remove
+        </Button>
+      </Buttons>
+    </StyledCard>
   );
 };
 

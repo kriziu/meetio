@@ -5,7 +5,7 @@ import { scrollY } from 'common/styles/scroll';
 import { motion } from 'framer-motion';
 
 export const PostContainer = motion(styled.div`
-  height: 25rem;
+  max-height: 25rem;
   margin-bottom: 2rem;
   max-height: 80vh;
 `);

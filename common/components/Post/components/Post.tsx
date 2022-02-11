@@ -1,7 +1,13 @@
-import { FC, RefObject, useState } from 'react';
+import { FC, MouseEvent, RefObject, useContext, useState } from 'react';
 
+import { KeyedMutator } from 'swr';
+import axios from 'axios';
+import { AnimatePresence } from 'framer-motion';
 import { AiFillHeart } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
+
+import { storeContext } from 'common/context/storeContext';
+import { loaderContext } from 'common/context/loaderContext';
 
 import { AvatarVerySmall } from 'common/components/Avatars';
 import { Header4, Header5 } from 'common/components/Headers';
@@ -12,7 +18,6 @@ import {
   PostDetails,
 } from '../styles/Post.elements';
 import PostDetail from './PostDetail';
-import { AnimatePresence } from 'framer-motion';
 
 export const defaultPost = {
   _id: '-1',
@@ -31,10 +36,12 @@ interface Props extends PostType {
   inDetails?: boolean;
   setAllContent?: boolean;
   postContentRef?: RefObject<HTMLDivElement>;
+  mutate: KeyedMutator<PostType[]>;
 }
 
 const Post: FC<Props> = props => {
   const {
+    _id,
     author,
     content,
     likes,
@@ -47,9 +54,35 @@ const Post: FC<Props> = props => {
     inDetails,
     setAllContent,
     postContentRef,
+    mutate,
   } = props;
 
+  const { likedPosts, refetchAll } = useContext(storeContext);
+  const { setLoading } = useContext(loaderContext);
+
   const [details, setDetails] = useState(false);
+
+  const handleLikeClick = (
+    e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    setLoading(true);
+
+    axios.post('/api/post/like', { postId: _id }).then(() => {
+      new Promise(resolve => {
+        let made = 0;
+
+        const helper = () => {
+          made++;
+          if (made === 2) resolve('success');
+        };
+
+        mutate().then(helper);
+        refetchAll().then(helper);
+      }).then(() => setLoading(false));
+    });
+  };
 
   return (
     <>
@@ -78,8 +111,8 @@ const Post: FC<Props> = props => {
         >
           {content}
         </PostContent>
-        <PostDetails>
-          <span className="heart">
+        <PostDetails liked={likedPosts.some(post => post._id === _id)}>
+          <span className="heart" onClick={handleLikeClick} tabIndex={0}>
             <AiFillHeart /> {likes}
           </span>
           <span>

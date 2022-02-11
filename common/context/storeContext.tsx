@@ -1,7 +1,6 @@
 import { createContext, FC, useEffect, useState } from 'react';
 
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import useSWR, { useSWRConfig } from 'swr';
 
 export const storeContext = createContext<{
@@ -10,14 +9,16 @@ export const storeContext = createContext<{
   friends: FriendType[];
   mineInvites: InviteType[];
   invites: InviteType[];
-  refetchAll: () => void;
+  likedPosts: PostType[];
+  refetchAll: () => Promise<unknown>;
 }>({
   mineFollowers: [],
   followers: [],
   friends: [],
   mineInvites: [],
   invites: [],
-  refetchAll: () => {},
+  likedPosts: [],
+  refetchAll: () => new Promise(resolve => resolve('resolve')),
 });
 
 const StoreProvider: FC = ({ children }) => {
@@ -30,6 +31,7 @@ const StoreProvider: FC = ({ children }) => {
   const [friends, setFriends] = useState<FriendType[]>([]);
   const [mineInvites, setMineInvites] = useState<InviteType[]>([]);
   const [invites, setInvites] = useState<InviteType[]>([]);
+  const [likedPosts, setLikedPosts] = useState<PostType[]>([]);
 
   const followersData = useSWR<{ mine: UserType[]; notMine: UserType[] }>(
     access && '/api/follow'
@@ -40,6 +42,8 @@ const StoreProvider: FC = ({ children }) => {
   const invitesData = useSWR<{ mine: InviteType[]; notMine: InviteType[] }>(
     access && '/api/invite'
   );
+
+  const likedData = useSWR<PostType[]>(access && '/api/post/like');
 
   useEffect(() => {
     const { data } = followersData;
@@ -64,11 +68,32 @@ const StoreProvider: FC = ({ children }) => {
     }
   }, [invitesData]);
 
+  useEffect(() => {
+    const { data } = likedData;
+    if (data) {
+      setLikedPosts(data);
+    }
+  }, [likedData]);
+
   const refetchAll = () => {
-    mutate('/api/follow');
-    mutate('/api/profile/friends');
-    mutate('/api/invite');
+    const promise = new Promise(resolve => {
+      let made = 0;
+
+      const helper = () => {
+        made++;
+        if (made === 4) resolve('refetched');
+      };
+
+      mutate('/api/follow').then(helper);
+      mutate('/api/profile/friends').then(helper);
+      mutate('/api/invite').then(helper);
+      mutate('/api/post/like').then(helper);
+    });
+
+    return promise;
   };
+
+  console.log(likedPosts);
 
   return (
     <storeContext.Provider
@@ -78,6 +103,7 @@ const StoreProvider: FC = ({ children }) => {
         friends,
         invites,
         mineInvites,
+        likedPosts,
         refetchAll,
       }}
     >
