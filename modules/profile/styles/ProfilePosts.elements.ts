@@ -16,7 +16,7 @@ export const PostsContainer = motion(styled.div<{
   ul {
     margin-top: 4rem;
     padding-bottom: 2rem;
-    height: ${({ height }) => height - 180}px;
+    height: ${({ height }) => height - 200}px;
     ${scrollY}
   }
 `);

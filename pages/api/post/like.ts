@@ -11,13 +11,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     if (req.method === 'GET') {
-      const likedPosts = await likeModel
-        .find({ liker: _id })
-        .populate({
-          path: 'postId',
-          model: postModel,
-          populate: { path: 'author', model: userModel },
-        });
+      const likedPosts = await likeModel.find({ liker: _id }).populate({
+        path: 'postId',
+        model: postModel,
+        populate: { path: 'author', model: userModel },
+      });
 
       return res.json(likedPosts.map(liked => liked.postId));
     }
@@ -33,17 +31,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (!like) {
-      await postToLike.updateOne({ likes: postToLike.likes + 1 });
-      postToLike.likes++;
-
       const newLike = new likeModel({ liker: _id, postId });
       await newLike.save();
 
       return res.json(postToLike);
     }
-
-    await postToLike.updateOne({ likes: postToLike.likes - 1 });
-    postToLike.likes--;
 
     await like.delete();
 

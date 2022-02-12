@@ -4,6 +4,7 @@ import connectDB from 'backend/middlewares/connectDB';
 import getUserId from 'backend/middlewares/getUserId';
 import postModel from 'backend/models/post.model';
 import userModel from 'backend/models/user.model';
+import likeModel from 'backend/models/like.model';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -19,6 +20,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         posts.reverse();
 
+        for (const post of posts) {
+          const postLikes = await likeModel.find({ postId: post._id }).count();
+          post.likes = postLikes;
+        }
+
         return res.json(posts);
 
       case 'POST':
@@ -29,8 +35,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           isPublic,
           imageURLs,
           comments: [],
-          commentsCount: 0,
-          likes: 0,
           author: _id,
         });
 

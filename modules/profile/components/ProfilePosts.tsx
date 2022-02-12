@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useRef } from 'react';
+import { Dispatch, FC, SetStateAction, useContext, useRef } from 'react';
 
 import { BsChevronDown } from 'react-icons/bs';
 import { useSwipeable } from 'react-swipeable';
@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import useSWR from 'swr';
 import Link from 'next/link';
 
+import { userContext } from 'common/context/userContext';
 import useWindowSize from 'common/hooks/useWindowSize';
 
 import { Flex } from 'common/components/Flex';
@@ -29,6 +30,9 @@ interface Props {
 }
 
 const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
+  const {
+    user: { _id },
+  } = useContext(userContext);
   const [, height] = useWindowSize();
 
   const listRef = useRef<HTMLUListElement>(null);
@@ -69,7 +73,7 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
           <BsChevronDown />
         </motion.div>
       </Flex>
-      {!topVisible && (
+      {!topVisible && user._id === _id && (
         <Link href="/liked" passHref>
           <Button as="a">Liked posts</Button>
         </Link>

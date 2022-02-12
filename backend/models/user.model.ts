@@ -22,6 +22,7 @@ export const userSchema = new mongoose.Schema<UserType>({
   followed: {
     type: Number,
     required: true,
+    default: 0,
   },
   imageURL: {
     type: String,

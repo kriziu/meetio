@@ -46,7 +46,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!userToFollow) return res.status(404).end();
 
         if (followToDelete) {
-          await userToFollow.updateOne({ followed: userToFollow.followed - 1 });
           userToFollow.followed--;
           await followToDelete?.delete();
 
@@ -58,7 +57,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           who: userToFollow._id,
         });
 
-        await userToFollow.updateOne({ followed: userToFollow.followed + 1 });
         userToFollow.followed++;
         await newFollow.save();
 
@@ -69,7 +67,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (!me) return res.status(404).end();
 
-        await me.updateOne({ followed: me.followed - 1 });
         me.followed--;
 
         const { followerId } = req.body;

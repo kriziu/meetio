@@ -10,8 +10,8 @@ const postSchema = new mongoose.Schema<PostModelType>({
   isPublic: { type: Boolean, required: true },
   content: { type: String, required: true },
   imageURLs: [{ type: String, required: true }],
-  likes: { type: Number, required: true },
-  commentsCount: { type: Number, required: true },
+  likes: { type: Number, required: true, default: 0 },
+  commentsCount: { type: Number, required: true, default: 0 },
   comments: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
 });
 

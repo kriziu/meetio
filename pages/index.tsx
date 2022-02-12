@@ -18,6 +18,6 @@ const Home: NextPage = () => {
 export default Home;
 
 // TODO:
-// 2. TWORZENIE POSTOW
 // 3. SYSTEM POWIADOMIEN
 // 4. KOMENTOWANIE
+// 5. DODAWANIE ZDJEC DO POSTOW
