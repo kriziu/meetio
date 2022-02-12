@@ -20,6 +20,7 @@ export declare global {
     from: UserType;
     to: UserType;
     date: Date;
+    read: boolean;
   }
 
   interface PostType {
@@ -39,6 +40,7 @@ export declare global {
     type: 'like' | 'mention' | 'reply' | 'comment';
     who: UserType;
     to: UserType;
+    read: boolean;
   }
 
   // BACKEND

@@ -9,6 +9,7 @@ import { StyledCard, Buttons, UserInfo } from './UserCard.elements';
 
 interface Props extends UserType {
   smallText?: string;
+  notify?: boolean;
 }
 
 const UserCard: FC<Props> = ({
@@ -17,10 +18,11 @@ const UserCard: FC<Props> = ({
   fName,
   lName,
   smallText,
+  notify,
   children,
 }) => {
   return (
-    <StyledCard as="li" variants={animateListItem}>
+    <StyledCard as="li" variants={animateListItem} notify={notify}>
       <Link href={`/profile/${_id}`} passHref>
         <UserInfo as="a">
           <AvatarSmall imageURL={imageURL} />

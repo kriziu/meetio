@@ -1,10 +1,14 @@
 import styled from '@emotion/styled';
 import { Flex } from 'common/components/Flex';
+import { notificationDot } from 'common/styles/notificationDot';
 
-export const NavBtn = styled.button<{ active: boolean; opened: boolean }>`
+export const NavBtn = styled.button<{
+  active: boolean;
+  opened: boolean;
+  notify?: boolean;
+}>`
   width: 4rem;
   height: 4rem;
-  position: fixed;
   top: 2.5rem;
   background-color: var(--color-primary);
   border: none;
@@ -16,6 +20,10 @@ export const NavBtn = styled.button<{ active: boolean; opened: boolean }>`
   border-radius: 1.7rem;
 
   cursor: pointer;
+
+  ${({ notify }) => notificationDot(-1, -1, notify)}
+
+  position: fixed;
 
   :hover {
     transform: scale(1.1);

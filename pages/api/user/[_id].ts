@@ -18,8 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     user.followed = userFollowers;
 
-    console.log(user);
-
     return res.status(200).json(user);
   } catch (err) {
     const msg = (err as Error).message;

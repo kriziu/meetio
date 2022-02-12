@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 
 import { userContext } from 'common/context/userContext';
+import { storeContext } from 'common/context/storeContext';
 
 import {
   NavBackground,
@@ -12,6 +13,7 @@ import {
 } from '../styles/Navigation.elements';
 import { animateBg, animateList } from '../animations/Navigation.animations';
 import NavigationItem from './NavigationItem';
+import { checkIfNotRead } from 'common/lib/checkIfNotRead';
 
 const MotionNavBackground = motion(NavBackground);
 
@@ -19,9 +21,11 @@ const Navigation: FC = () => {
   const {
     user: { _id },
   } = useContext(userContext);
+  const { notifications } = useContext(storeContext);
 
   const router = useRouter();
 
+  const [notify, setNotify] = useState(false);
   const [show, setShow] = useState(false);
   const [opened, setOpened] = useState(false);
 
@@ -38,6 +42,10 @@ const Navigation: FC = () => {
     };
   }, [router.events, router.pathname]);
 
+  useEffect(() => {
+    setNotify(checkIfNotRead(notifications));
+  }, [notifications]);
+
   if (!show || !_id) return null;
 
   return (
@@ -48,6 +56,7 @@ const Navigation: FC = () => {
         opened={opened}
         aria-label="Navigation"
         tabIndex={0}
+        notify={notify}
       >
         <NavBtnIcon opened={opened} />
       </NavBtn>

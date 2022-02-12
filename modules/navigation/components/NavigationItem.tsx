@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 import { animateItem } from '../animations/NavigationItem.animations';
+import { StyledA } from '../styles/NavigationItem.elements';
 
 interface Props {
   name: string;
@@ -13,8 +14,8 @@ interface Props {
 const NavigationItem: FC<Props> = ({ name, linkTo }) => {
   return (
     <motion.li variants={animateItem}>
-      <Link href={linkTo}>
-        <a>{name}</a>
+      <Link href={linkTo} passHref>
+        <StyledA>{name}</StyledA>
       </Link>
     </motion.li>
   );

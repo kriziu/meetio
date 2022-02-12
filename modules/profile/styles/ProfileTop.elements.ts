@@ -1,7 +1,12 @@
 import styled from '@emotion/styled';
 import { Flex } from 'common/components/Flex';
+import { notificationDot } from 'common/styles/notificationDot';
 
-export const Center = styled(Flex)<{ height: number; visible: boolean }>`
+export const Center = styled(Flex)<{
+  height: number;
+  visible: boolean;
+  notify?: boolean;
+}>`
   margin-top: 5rem;
   flex-direction: column;
   height: ${({ height }) => `calc(${height}px - 20rem)`};
@@ -23,6 +28,8 @@ export const Center = styled(Flex)<{ height: number; visible: boolean }>`
     a {
       text-align: center;
       width: 45%;
+
+      ${({ notify }) => notificationDot(0, 0, notify)}
     }
   }
 
