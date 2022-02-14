@@ -12,6 +12,7 @@ import { InvitesContainer } from '../styles/Invites.elements';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
 import { sortAlph } from 'common/lib/sort';
+import useObserverRead from 'common/hooks/useObserverRead';
 
 const searchInvite = (invite: InviteType, search: string, mine = false) => {
   if (mine) {
@@ -32,6 +33,8 @@ const Invites: FC = () => {
 
   const [search, setSearch] = useState('');
 
+  const { listRef, childrenRefs } = useObserverRead('/api/read/invites');
+
   return (
     <InvitesContainer height={height}>
       <SearchList
@@ -41,12 +44,22 @@ const Invites: FC = () => {
         handleSortChange={() => {}}
       />
       <Header1>Invites</Header1>
-      <motion.ul variants={animateList} initial="hidden" animate="show">
+      <motion.ul
+        variants={animateList}
+        initial="hidden"
+        animate="show"
+        ref={listRef}
+      >
         {invites
           .filter(invite => searchInvite(invite, search))
           .sort((a, b) => sortAlph(a.from, b.from))
-          .map(invite => (
-            <Invite {...invite} key={invite._id} />
+          .map((invite, index) => (
+            <Invite
+              {...invite}
+              key={invite._id}
+              childrenRefs={childrenRefs}
+              index={index}
+            />
           ))}
       </motion.ul>
       <Header2>Your invites</Header2>

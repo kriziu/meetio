@@ -1,4 +1,11 @@
-import { Dispatch, FC, SetStateAction, useContext } from 'react';
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { useSwipeable } from 'react-swipeable';
 import { motion } from 'framer-motion';
@@ -8,15 +15,16 @@ import Link from 'next/link';
 import { userContext } from 'common/context/userContext';
 import { storeContext } from 'common/context/storeContext';
 import { loaderContext } from 'common/context/loaderContext';
+import useWindowSize from 'common/hooks/useWindowSize';
 
 import { Avatar } from 'common/components/Avatars';
 import { Center } from '../styles/ProfileTop.elements';
 import { Header1, Header5 } from 'common/components/Headers';
 import { Button } from 'common/components/Button';
 import { Flex } from 'common/components/Flex';
-import useWindowSize from 'common/hooks/useWindowSize';
 import { animateProfileTop } from '../animations/ProfileTop.animations';
 import { promiseToast } from 'common/lib/toasts';
+import { checkIfNotRead } from 'common/lib/checkIfNotRead';
 
 const MotionCenter = motion(Center);
 
@@ -26,6 +34,8 @@ interface Props {
   setTopVisible: Dispatch<SetStateAction<boolean>>;
   setUser: Dispatch<SetStateAction<UserType>>;
 }
+
+// SPRAWDZ CZY WYSLAL ZAPROSZENIE ZEBY POKAZYWALO ZE CIE ZAPROSIL ZAMIAST DODAC DO ZNAOJMYCH
 
 const ProfileTop: FC<Props> = ({
   user,
@@ -38,11 +48,17 @@ const ProfileTop: FC<Props> = ({
   } = useContext(userContext);
   const me = user._id === _id;
 
-  const { friends, followers, mineFollowers, refetchAll } =
+  const { friends, followers, mineFollowers, refetchAll, invites } =
     useContext(storeContext);
   const { setLoading } = useContext(loaderContext);
 
   const [, height] = useWindowSize();
+
+  const [notify, setNotify] = useState(false);
+
+  useEffect(() => {
+    setNotify(checkIfNotRead(invites));
+  }, [invites]);
 
   const handlers = useSwipeable({
     onSwipedUp: e => {
@@ -108,7 +124,7 @@ const ProfileTop: FC<Props> = ({
             </Link>
 
             <Link href="/invites" passHref>
-              <Button as="a" secondary>
+              <Button as="a" secondary className={notify ? 'invites' : ''}>
                 Invites
               </Button>
             </Link>

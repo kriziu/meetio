@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC, MutableRefObject, useContext } from 'react';
 
 import axios from 'axios';
 
@@ -10,7 +10,20 @@ import UserCard from 'common/components/UserCard/UserCard';
 import { Button } from 'common/components/Button';
 import { getDate } from 'common/lib/date';
 
-const Invite: FC<InviteType> = ({ _id, from, to, date, read }) => {
+interface Props extends InviteType {
+  childrenRefs?: MutableRefObject<HTMLLIElement[]>;
+  index?: number;
+}
+
+const Invite: FC<Props> = ({
+  _id,
+  from,
+  to,
+  date,
+  read,
+  childrenRefs,
+  index,
+}) => {
   const { user } = useContext(userContext);
   const { refetchAll } = useContext(storeContext);
   const { setLoading } = useContext(loaderContext);
@@ -39,6 +52,12 @@ const Invite: FC<InviteType> = ({ _id, from, to, date, read }) => {
       {...userToPass}
       smallText={getDate(new Date(date))}
       notify={!read && toMe}
+      ref={(el: HTMLLIElement) => {
+        if (!childrenRefs || index === undefined || !el) return;
+
+        childrenRefs.current[index] = el;
+      }}
+      htmlId={_id}
     >
       {toMe && <Button onClick={handleAccept}>Accept</Button>}
       <Button onClick={handleRemove} secondary>

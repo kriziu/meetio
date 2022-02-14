@@ -83,6 +83,30 @@ const StoreProvider: FC = ({ children }) => {
       who: user,
       type: 'reply',
     },
+    {
+      _id: '126',
+      date: new Date(),
+      read: true,
+      to: user,
+      who: user,
+      type: 'like',
+    },
+    {
+      _id: '127',
+      date: new Date(),
+      read: true,
+      to: user,
+      who: user,
+      type: 'mention',
+    },
+    {
+      _id: '128',
+      date: new Date(),
+      read: true,
+      to: user,
+      who: user,
+      type: 'reply',
+    },
   ];
 
   return (

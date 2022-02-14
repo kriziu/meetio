@@ -5,7 +5,6 @@ import { notificationDot } from 'common/styles/notificationDot';
 export const Center = styled(Flex)<{
   height: number;
   visible: boolean;
-  notify?: boolean;
 }>`
   margin-top: 5rem;
   flex-direction: column;
@@ -28,8 +27,10 @@ export const Center = styled(Flex)<{
     a {
       text-align: center;
       width: 45%;
+    }
 
-      ${({ notify }) => notificationDot(0, 0, notify)}
+    .invites {
+      ${notificationDot(0, 0, true)}
     }
   }
 

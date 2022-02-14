@@ -21,7 +21,7 @@ const Navigation: FC = () => {
   const {
     user: { _id },
   } = useContext(userContext);
-  const { notifications } = useContext(storeContext);
+  const { notifications, invites } = useContext(storeContext);
 
   const router = useRouter();
 
@@ -43,8 +43,12 @@ const Navigation: FC = () => {
   }, [router.events, router.pathname]);
 
   useEffect(() => {
-    setNotify(checkIfNotRead(notifications));
-  }, [notifications]);
+    let notifyTemp = checkIfNotRead(notifications);
+
+    if (!notifyTemp) notifyTemp = checkIfNotRead(invites);
+
+    setNotify(notifyTemp);
+  }, [invites, notifications]);
 
   if (!show || !_id) return null;
 
@@ -56,7 +60,7 @@ const Navigation: FC = () => {
         opened={opened}
         aria-label="Navigation"
         tabIndex={0}
-        notify={notify}
+        notify={notify && !opened}
       >
         <NavBtnIcon opened={opened} />
       </NavBtn>
@@ -67,9 +71,17 @@ const Navigation: FC = () => {
       >
         <motion.ul variants={animateList}>
           <NavigationItem name="For you" linkTo="/" />
-          <NavigationItem name="Profile" linkTo={`/profile/${_id}`} />
+          <NavigationItem
+            name="Profile"
+            linkTo={`/profile/${_id}`}
+            type="profile"
+          />
           <NavigationItem name="Friends" linkTo="/friends" />
-          <NavigationItem name="Notifications" linkTo="/notifications" />
+          <NavigationItem
+            name="Notifications"
+            linkTo="/notifications"
+            type="notifications"
+          />
         </motion.ul>
       </MotionNavBackground>
     </>

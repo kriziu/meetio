@@ -4,6 +4,7 @@ interface InviteModelType {
   from: mongoose.Types.ObjectId;
   to: mongoose.Types.ObjectId;
   date: Date;
+  read: boolean;
 }
 
 const inviteSchema = new mongoose.Schema<InviteModelType>({
@@ -19,6 +20,11 @@ const inviteSchema = new mongoose.Schema<InviteModelType>({
     type: Date,
     required: true,
     default: new Date(),
+  },
+  read: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 });
 

@@ -22,6 +22,8 @@ import Search from 'modules/search/components/Search';
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
 
+  const padding = router.pathname === ('/login' || '/register') ? '0' : '2rem';
+
   return (
     <>
       <Head>
@@ -55,7 +57,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
                 <Circle radius={13} position={{ x: 75, y: 20 }} secondary={1} />
               </div>
               <Background />
-              <div style={{ padding: '2rem' }}>
+              <div style={{ padding }}>
                 <Search />
                 <AnimatePresence exitBeforeEnter>
                   <motion.div

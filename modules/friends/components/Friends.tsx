@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -7,27 +7,34 @@ import useWindowSize from 'common/hooks/useWindowSize';
 
 import { Header1, Header4 } from 'common/components/Headers';
 import Friend from './Friend';
-import { StyledUl } from '../styles/Friends.elements';
+import { InvitesContainer, StyledUl } from '../styles/Friends.elements';
 import { animateList } from 'common/animations/list.animations';
 import SearchList from 'common/components/SearchList/SearchList';
 import { filterUser } from 'common/lib/filterUser';
 import { sortAlph } from 'common/lib/sort';
+import { checkIfNotRead } from 'common/lib/checkIfNotRead';
 
 const Friends: FC = () => {
-  const { friends } = useContext(storeContext);
+  const { friends, invites } = useContext(storeContext);
 
   const [, height] = useWindowSize();
+
+  const [notify, setNotify] = useState(false);
+
+  useEffect(() => {
+    setNotify(checkIfNotRead(invites));
+  }, [invites]);
 
   const [search, setSearch] = useState('');
 
   return (
     <div>
       <Header1>Friends</Header1>
-      <div style={{ textAlign: 'center' }}>
+      <InvitesContainer notify={notify}>
         <Link href="/invites" passHref>
           <Header4 as="a">(See invites)</Header4>
         </Link>
-      </div>
+      </InvitesContainer>
 
       <SearchList
         input={search}
