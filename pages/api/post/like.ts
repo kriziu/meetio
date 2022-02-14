@@ -5,6 +5,7 @@ import getUserId from 'backend/middlewares/getUserId';
 import postModel from 'backend/models/post.model';
 import likeModel from 'backend/models/like.model';
 import userModel from 'backend/models/user.model';
+import notificationModel from 'backend/models/notification.model';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -33,6 +34,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!like) {
       const newLike = new likeModel({ liker: _id, postId });
       await newLike.save();
+
+      // DODAC OSOBNA METODE DO ROBIENIA POWIADOMIEN ABY BYLA BARDZIEJ REUZYWALNA
+      // POWIADOMIENIA SA OD NAJSTARSZEGO, nwm jak inne rzeczy typu invite wiec trzeba to sprawdzic, powinno byc od najnowszego na gorze do najstarszego
+      const newNotification = new notificationModel({
+        date: new Date(),
+        type: 'like',
+        who: _id,
+        to: postToLike.author,
+      });
+      await newNotification.save();
 
       return res.json(postToLike);
     }

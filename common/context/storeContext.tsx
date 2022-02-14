@@ -39,6 +39,9 @@ const StoreProvider: FC = ({ children }) => {
     access && '/api/invite'
   );
   const likedData = useSWR<PostType[]>(access && '/api/post/like');
+  const notificationData = useSWR<NotificationType[]>(
+    access && '/api/notification'
+  );
 
   const refetchAll = () => {
     const promise = new Promise(resolve => {
@@ -53,61 +56,11 @@ const StoreProvider: FC = ({ children }) => {
       mutate('/api/profile/friends').then(helper);
       mutate('/api/invite').then(helper);
       mutate('/api/post/like').then(helper);
+      mutate('/api/notification').then(helper);
     });
 
     return promise;
   };
-
-  const notifications: NotificationType[] = [
-    {
-      _id: '123',
-      date: new Date(),
-      read: true,
-      to: user,
-      who: user,
-      type: 'like',
-    },
-    {
-      _id: '124',
-      date: new Date(),
-      read: true,
-      to: user,
-      who: user,
-      type: 'mention',
-    },
-    {
-      _id: '125',
-      date: new Date(),
-      read: true,
-      to: user,
-      who: user,
-      type: 'reply',
-    },
-    {
-      _id: '126',
-      date: new Date(),
-      read: true,
-      to: user,
-      who: user,
-      type: 'like',
-    },
-    {
-      _id: '127',
-      date: new Date(),
-      read: true,
-      to: user,
-      who: user,
-      type: 'mention',
-    },
-    {
-      _id: '128',
-      date: new Date(),
-      read: true,
-      to: user,
-      who: user,
-      type: 'reply',
-    },
-  ];
 
   return (
     <storeContext.Provider
@@ -118,8 +71,8 @@ const StoreProvider: FC = ({ children }) => {
         invites: invitesData.data ? invitesData.data.notMine : [],
         mineInvites: invitesData.data ? invitesData.data.mine : [],
         likedPosts: likedData.data ? likedData.data : [],
+        notifications: notificationData.data ? notificationData.data : [],
         refetchAll,
-        notifications,
       }}
     >
       {children}

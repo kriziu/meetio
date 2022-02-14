@@ -35,8 +35,6 @@ interface Props {
   setUser: Dispatch<SetStateAction<UserType>>;
 }
 
-// SPRAWDZ CZY WYSLAL ZAPROSZENIE ZEBY POKAZYWALO ZE CIE ZAPROSIL ZAMIAST DODAC DO ZNAOJMYCH
-
 const ProfileTop: FC<Props> = ({
   user,
   setUser,
@@ -92,6 +90,19 @@ const ProfileTop: FC<Props> = ({
     });
   };
 
+  const handleAcceptInvite = () => {
+    setLoading(true);
+    axios
+      .patch('/api/invite', {
+        inviteId: invites.find(invite => invite.from._id === user._id)?._id,
+      })
+      .then(() => {
+        refetchAll().then(() => setLoading(false));
+        setLoading(false);
+      });
+  };
+
+  const isInviter = invites.map(invite => invite.from._id).includes(user._id);
   const isFriend = friends.map(friend => friend._id).includes(user._id);
   const isFollowed = followers.map(follower => follower._id).includes(user._id);
 
@@ -134,7 +145,12 @@ const ProfileTop: FC<Props> = ({
         {!me && (
           <>
             {isFriend && <Button onClick={handleDeleteFriend}>Remove</Button>}
-            {!isFriend && <Button onClick={handleAddFriend}>Add friend</Button>}
+            {!isFriend && isInviter && (
+              <Button onClick={handleAcceptInvite}>Accept</Button>
+            )}
+            {!isFriend && !isInviter && (
+              <Button onClick={handleAddFriend}>Add friend</Button>
+            )}
 
             {isFollowed && (
               <Button secondary onClick={handleFollow}>

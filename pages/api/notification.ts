@@ -1,19 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import connectDB from 'backend/middlewares/connectDB';
+import userModel from 'backend/models/user.model';
 import getUserId from 'backend/middlewares/getUserId';
-import inviteModel from 'backend/models/invite.model';
+import notificationModel from 'backend/models/notification.model';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
-  const { ids } = req.body;
 
   try {
-    const invites = await inviteModel
-      .find({ _id: { $in: ids }, to: _id })
-      .updateMany({ read: true });
+    const notifications = await notificationModel
+      .find({ to: _id })
+      .limit(100)
+      .populate({ path: 'who to', model: userModel });
 
-    return res.json(invites);
+    return res.json(notifications);
   } catch (err) {
     const msg = (err as Error).message;
     console.log(msg);
