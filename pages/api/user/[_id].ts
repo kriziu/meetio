@@ -16,9 +16,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(404).end();
     }
 
-    user.followed = userFollowers;
+    const userReturned: UserType = {
+      ...user.toObject(),
+      followed: userFollowers,
+    };
 
-    return res.status(200).json(user);
+    console.log(userReturned);
+
+    return res.status(200).json(userReturned);
   } catch (err) {
     const msg = (err as Error).message;
     console.log(msg);

@@ -45,11 +45,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (!userToFollow) return res.status(404).end();
 
-        if (followToDelete) {
-          userToFollow.followed--;
-          await followToDelete?.delete();
+        let followed = 0;
 
-          return res.json(userToFollow);
+        if (followToDelete) {
+          await followToDelete?.delete();
+          followed = await followModel.find({ who }).count();
+
+          return res.json({ ...userToFollow.toObject(), followed });
         }
 
         const newFollow = new followModel({
@@ -57,17 +59,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           who: userToFollow._id,
         });
 
-        userToFollow.followed++;
         await newFollow.save();
+        followed = await followModel.find({ who }).count();
 
-        return res.json(userToFollow);
+        return res.json({ ...userToFollow.toObject(), followed });
 
       case 'DELETE':
         const me = await userModel.findById(_id);
 
         if (!me) return res.status(404).end();
-
-        me.followed--;
 
         const { followerId } = req.body;
         await followModel.findOneAndDelete({ who: _id, follower: followerId });

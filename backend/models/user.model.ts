@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { validateEmail } from 'common/lib/validators';
 
-interface UserModelType extends UserType {
+type UserModelType = Omit<UserType, 'followed'> & {
   password: string;
-}
+};
 
 export const userSchema = new mongoose.Schema<UserType>({
   fName: {
@@ -18,11 +18,6 @@ export const userSchema = new mongoose.Schema<UserType>({
     type: String,
     required: true,
     validate: validateEmail,
-  },
-  followed: {
-    type: Number,
-    required: true,
-    default: 0,
   },
   imageURL: {
     type: String,

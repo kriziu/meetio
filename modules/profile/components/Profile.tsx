@@ -1,6 +1,5 @@
 import { FC, useContext, useEffect, useState } from 'react';
 
-import axios from 'axios';
 import { useRouter } from 'next/router';
 
 import { userContext } from 'common/context/userContext';
@@ -8,6 +7,7 @@ import { useBigSpinner } from 'common/hooks/useSpinner';
 
 import ProfilePosts from './ProfilePosts';
 import ProfileTop from './ProfileTop';
+import useSWR from 'swr';
 
 const Profile: FC = () => {
   const me = useContext(userContext).user;
@@ -20,24 +20,21 @@ const Profile: FC = () => {
 
   const [BigSpinner, setLoading, loading] = useBigSpinner();
 
+  const { data } = useSWR<UserType>(userId && `/api/user/${userId}`);
+
   useEffect(() => {
     setTopVisible(true);
     if (me._id === userId) {
       setUser(me);
-      setLoading(false);
       return;
     }
 
-    setLoading(true);
-
-    console.log(userId);
-
-    userId &&
-      axios.get(`/api/user/${userId}`).then(res => {
-        setUser(res.data);
-        setLoading(false);
-      });
-  }, [userId, me, me._id, setLoading]);
+    if (!data) setLoading(true);
+    else {
+      setUser(data);
+      setLoading(false);
+    }
+  }, [userId, me, me._id, data, setLoading]);
 
   if (loading) return <BigSpinner />;
 
