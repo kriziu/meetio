@@ -20,7 +20,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       fName,
       lName,
       imageURL: '-1',
-      followed: 0,
     });
 
     await user.save();

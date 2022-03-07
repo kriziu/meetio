@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { validateEmail } from 'common/lib/validators';
 
-type UserModelType = Omit<UserType, 'followed'> & {
+export type UserModelType = Omit<UserType, 'followed'> & {
   password: string;
 };
 

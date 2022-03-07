@@ -21,8 +21,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       followed: userFollowers,
     };
 
-    console.log(userReturned);
-
     return res.status(200).json(userReturned);
   } catch (err) {
     const msg = (err as Error).message;

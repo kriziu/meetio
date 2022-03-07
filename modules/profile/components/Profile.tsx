@@ -20,7 +20,7 @@ const Profile: FC = () => {
 
   const [BigSpinner, setLoading, loading] = useBigSpinner();
 
-  const { data } = useSWR<UserType>(userId && `/api/user/${userId}`);
+  const { data, error } = useSWR<UserType>(userId && `/api/user/${userId}`);
 
   useEffect(() => {
     setTopVisible(true);
@@ -35,6 +35,8 @@ const Profile: FC = () => {
       setLoading(false);
     }
   }, [userId, me, me._id, data, setLoading]);
+
+  if (error) return <>Invalid profile id</>;
 
   if (loading) return <BigSpinner />;
 

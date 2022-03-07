@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Document } from 'mongoose';
 
 import connectDB from 'backend/middlewares/connectDB';
-import userModel from 'backend/models/user.model';
+import userModel, { UserModelType } from 'backend/models/user.model';
 import getUserId from 'backend/middlewares/getUserId';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -31,9 +31,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
       .select('-email');
 
-    users = users.filter((user: Document<any, any, UserType> & UserType) => {
-      return !_id.equals(user._id);
-    });
+    users = users.filter(
+      (user: Document<any, any, UserModelType> & UserModelType) => {
+        return !_id.equals(user._id);
+      }
+    );
 
     if (userWithEmail && !_id.equals(userWithEmail._id))
       return res.json([userWithEmail]);
