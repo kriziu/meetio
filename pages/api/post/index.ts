@@ -6,6 +6,12 @@ import postModel from 'backend/models/post.model';
 import userModel from 'backend/models/user.model';
 import likeModel from 'backend/models/like.model';
 
+// DODAC OSOBNA METODE DO ROBIENIA POWIADOMIEN ABY BYLA BARDZIEJ REUZYWALNA (sprawdz plik like.ts)
+// WIDOCZNOSC POSTOW
+// DOPRACOWAC POWIADOMIENIA ABY DALO SIE SPRAWDZIC ITD
+// KOMENTARZE
+// OGOLNE TESTY ITD
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
 
@@ -14,15 +20,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       case 'GET':
         const { author } = req.query;
 
-        const posts = await postModel
+        const postsDB = await postModel
           .find({ author })
           .populate({ path: 'author', model: userModel });
 
-        posts.reverse();
+        const posts: PostType[] = [];
 
-        for (const post of posts) {
-          const postLikes = await likeModel.find({ postId: post._id }).count();
-          post.likes = postLikes;
+        for (const post of postsDB) {
+          const likes = await likeModel.find({ postId: post._id }).count();
+          posts.unshift({ ...(post as any).toObject(), likes });
         }
 
         return res.json(posts);

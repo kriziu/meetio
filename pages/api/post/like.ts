@@ -18,7 +18,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         populate: { path: 'author', model: userModel },
       });
 
-      return res.json(likedPosts.map(liked => liked.postId));
+      const posts: PostType[] = [];
+
+      for (const post of likedPosts.map(liked =>
+        (liked.postId as any).toObject()
+      )) {
+        const likes = await likeModel.find({ postId: post._id }).count();
+        posts.unshift({ ...post, likes });
+      }
+
+      return res.json(posts);
     }
 
     const { postId } = req.body;
@@ -35,15 +44,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const newLike = new likeModel({ liker: _id, postId });
       await newLike.save();
 
-      // DODAC OSOBNA METODE DO ROBIENIA POWIADOMIEN ABY BYLA BARDZIEJ REUZYWALNA
-      // POWIADOMIENIA SA OD NAJSTARSZEGO, nwm jak inne rzeczy typu invite wiec trzeba to sprawdzic, powinno byc od najnowszego na gorze do najstarszego
-      const newNotification = new notificationModel({
-        date: new Date(),
-        type: 'like',
-        who: _id,
-        to: postToLike.author,
-      });
-      await newNotification.save();
+      if (!_id.equals(postToLike.author as any)) {
+        const newNotification = new notificationModel({
+          date: new Date(),
+          type: 'like',
+          who: _id,
+          to: postToLike.author,
+        });
+        await newNotification.save();
+      }
 
       return res.json(postToLike);
     }

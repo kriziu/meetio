@@ -11,8 +11,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const notifications = await notificationModel
       .find({ to: _id })
-      .limit(100)
+      .limit(50)
       .populate({ path: 'who to', model: userModel });
+
+    notifications.reverse();
 
     return res.json(notifications);
   } catch (err) {

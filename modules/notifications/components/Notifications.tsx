@@ -1,7 +1,6 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { FC, useContext } from 'react';
 
 import { motion } from 'framer-motion';
-import axios from 'axios';
 
 import { storeContext } from 'common/context/storeContext';
 

@@ -26,6 +26,7 @@ const Profile: FC = () => {
     setTopVisible(true);
     if (me._id === userId) {
       setUser(me);
+      setLoading(false);
       return;
     }
 

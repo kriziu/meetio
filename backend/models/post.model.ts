@@ -1,6 +1,9 @@
 import mongoose, { ObjectId } from 'mongoose';
 
-export type PostModelType = Omit<PostType, 'author' | 'comments'> & {
+export type PostModelType = Omit<
+  PostType,
+  'author' | 'comments' | 'likes' | 'commentsCount'
+> & {
   author: ObjectId;
   comments: ObjectId[];
 };
@@ -10,8 +13,6 @@ const postSchema = new mongoose.Schema<PostModelType>({
   isPublic: { type: Boolean, required: true },
   content: { type: String, required: true },
   imageURLs: [{ type: String, required: true }],
-  likes: { type: Number, required: true, default: 0 },
-  commentsCount: { type: Number, required: true, default: 0 },
   comments: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
 });
 
