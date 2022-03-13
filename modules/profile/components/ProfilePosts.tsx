@@ -88,7 +88,10 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
         {data?.map(post => {
           return (
             <motion.li key={post._id} variants={animateListItem}>
-              <Post {...post} mutate={mutate} />
+              <Post
+                {...post}
+                //  mutate={mutate}
+              />
             </motion.li>
           );
         })}

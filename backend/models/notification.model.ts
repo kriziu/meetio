@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
 
-export type NotificationModelType = Omit<NotificationType, 'who' | 'to'> & {
+export type NotificationModelType = Omit<
+  NotificationType,
+  'who' | 'to' | 'postId'
+> & {
   who: mongoose.Types.ObjectId;
   to: mongoose.Types.ObjectId;
+  postId: mongoose.Types.ObjectId;
 };
 
 const notificationSchema = new mongoose.Schema<NotificationModelType>({
@@ -15,6 +19,7 @@ const notificationSchema = new mongoose.Schema<NotificationModelType>({
   who: { type: mongoose.Types.ObjectId, required: true },
   to: { type: mongoose.Types.ObjectId, required: true },
   read: { type: Boolean, required: true, default: false },
+  postId: { type: mongoose.Types.ObjectId, required: true },
 });
 
 const notificationModel =

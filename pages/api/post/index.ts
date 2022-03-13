@@ -8,7 +8,6 @@ import likeModel from 'backend/models/like.model';
 
 // DODAC OSOBNA METODE DO ROBIENIA POWIADOMIEN ABY BYLA BARDZIEJ REUZYWALNA (sprawdz plik like.ts)
 // WIDOCZNOSC POSTOW
-// POLUBIENIE POSTA Z JAKIMS OPOZNIENIEM JEST LEKKIM (CHODZI O KOLOROWANIE SERCA)
 // DOPRACOWAC POWIADOMIENIA ABY DALO SIE SPRAWDZIC ITD
 // KOMENTARZE
 // FOR YOU PAGE
@@ -30,7 +29,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         for (const post of postsDB) {
           const likes = await likeModel.find({ postId: post._id }).count();
-          posts.unshift({ ...(post as any).toObject(), likes });
+
+          !post.toObject().parentPost &&
+            posts.unshift({ ...(post as any).toObject(), likes });
         }
 
         return res.json(posts);

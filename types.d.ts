@@ -30,8 +30,8 @@ export declare global {
     content: string;
     imageURLs: string[];
     likes: number;
-    commentsCount: number;
     comments: PostType[];
+    parentPost: string | null;
   }
 
   interface NotificationType {
@@ -41,6 +41,7 @@ export declare global {
     who: UserType;
     to: UserType;
     read: boolean;
+    postId: string;
   }
 
   // BACKEND

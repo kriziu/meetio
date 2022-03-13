@@ -1,8 +1,10 @@
-import { FC, useRef, useState, WheelEvent } from 'react';
+import { FC, useContext, useRef, useState, WheelEvent } from 'react';
 
-import { KeyedMutator } from 'swr';
-import { AnimatePresence, motion } from 'framer-motion';
+import useSWR, { KeyedMutator } from 'swr';
+import { motion } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
+
+import { postContext } from 'common/context/postContext';
 
 import Portal from 'common/components/Portal';
 import { Comments, CustomBackground } from '../styles/PostDetails.elements';
@@ -21,21 +23,20 @@ import {
   animateListItem,
 } from 'common/animations/list.animations';
 
-interface Props extends PostType {
-  closeDetail: () => void;
-  comment?: boolean;
-  mutate: KeyedMutator<PostType[]>;
+interface Props {
+  _id: string;
 }
 
-const PostDetail: FC<Props> = props => {
+const PostDetail: FC<Props> = ({ _id }) => {
+  const { showPost } = useContext(postContext);
+
   const listRef = useRef<HTMLUListElement>(null);
   const postContentRef = useRef<HTMLDivElement>(null);
 
-  const [selectedComment, setSelectedComment] = useState(-1);
   const [showComments, setShowComments] = useState(false);
   const [allContent, setAllContent] = useState(false);
 
-  const key = props._id + '1';
+  const { data, error } = useSWR<PostType>(`/api/post/${_id}`);
 
   const handlers = useSwipeable({
     onSwipedUp: e => {
@@ -71,72 +72,63 @@ const PostDetail: FC<Props> = props => {
     setShowComments(true);
   };
 
+  if (!data && !error) return null; // ladowanie potemn
+
+  if (error || !data) return null;
+
   return (
-    <>
-      <AnimatePresence>
-        {selectedComment !== -1 && (
-          <PostDetail
-            {...props}
-            closeDetail={() => setSelectedComment(-1)}
-            likes={selectedComment}
-            _id={key}
-            comment
-          />
-        )}
-      </AnimatePresence>
-      <Portal>
-        <CustomBackground
-          onWheel={handleWheel}
-          animate={selectedComment === -1 ? 'shown' : 'hidden'}
-          {...animateDetails}
-          key={key}
-          {...handlers}
+    <Portal>
+      <CustomBackground
+        onWheel={handleWheel}
+        animate={true ? 'shown' : 'hidden'}
+        {...animateDetails}
+        key={_id}
+        {...handlers}
+      >
+        <Flex className="btn">
+          <Button onClick={() => showPost(data.parentPost)}>Back</Button>
+        </Flex>
+
+        <PostContainer
+          variants={animatePost}
+          animate={allContent ? 'content' : showComments ? 'hide' : 'show'}
+          onClick={() => setAllContent(prev => !prev)}
         >
-          <Flex className="btn">
-            <Button onClick={props.closeDetail}>Back</Button>
-          </Flex>
+          <Post
+            //mutate={() => {}}
+            {...data}
+            dontOpen
+            inDetails
+            setAllContent={allContent}
+            postContentRef={postContentRef}
+          />
+        </PostContainer>
 
-          <PostContainer
-            variants={animatePost}
-            animate={allContent ? 'content' : showComments ? 'hide' : 'show'}
-            onClick={() => setAllContent(prev => !prev)}
+        <Comments>
+          <Header3
+            onClick={e => {
+              e.stopPropagation();
+              setAllContent(false);
+              setShowComments(!showComments);
+            }}
           >
-            <Post
-              {...props}
-              dontOpen
-              inDetails
-              comment={props.comment}
-              setAllContent={allContent}
-              postContentRef={postContentRef}
-            />
-          </PostContainer>
-
-          <Comments onClick={() => setSelectedComment(1)}>
-            <Header3
-              onClick={e => {
-                e.stopPropagation();
-                setAllContent(false);
-                setShowComments(!showComments);
-              }}
-            >
-              Comments
-            </Header3>
-            <motion.ul
-              ref={listRef}
-              variants={animateList}
-              initial="hidden"
-              animate="show"
-            >
-              {props.comments.map(comment => {
-                <motion.li variants={animateListItem} key={comment._id}>
-                  <Comment {...comment} />
-                </motion.li>;
-              })}
-            </motion.ul>
-          </Comments>
-        </CustomBackground>
-      </Portal>
-    </>
+            Comments
+          </Header3>
+          <motion.ul
+            ref={listRef}
+            variants={animateList}
+            initial="hidden"
+            animate="show"
+          >
+            {data.comments.map(comment => (
+              <motion.li variants={animateListItem} key={comment._id}>
+                <Comment {...comment} />
+              </motion.li>
+            ))}
+          </motion.ul>
+        </Comments>
+      </CustomBackground>
+    </Portal>
   );
 };
 

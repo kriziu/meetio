@@ -50,6 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           type: 'like',
           who: _id,
           to: postToLike.author,
+          postId: postToLike._id,
         });
         await newNotification.save();
       }

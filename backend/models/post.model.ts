@@ -2,10 +2,11 @@ import mongoose, { ObjectId } from 'mongoose';
 
 export type PostModelType = Omit<
   PostType,
-  'author' | 'comments' | 'likes' | 'commentsCount'
+  'author' | 'comments' | 'likes' | 'commentsCount' | 'parentPost'
 > & {
   author: ObjectId;
   comments: ObjectId[];
+  parentPost: ObjectId | null;
 };
 
 const postSchema = new mongoose.Schema<PostModelType>({
@@ -14,6 +15,7 @@ const postSchema = new mongoose.Schema<PostModelType>({
   content: { type: String, required: true },
   imageURLs: [{ type: String, required: true }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
+  parentPost: { type: mongoose.Schema.Types.ObjectId },
 });
 
 const postModel =

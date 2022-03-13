@@ -1,13 +1,13 @@
-import { FC, MouseEvent, RefObject, useContext, useState } from 'react';
+import { FC, MouseEvent, RefObject, useContext } from 'react';
 
 import { KeyedMutator } from 'swr';
 import axios from 'axios';
-import { AnimatePresence } from 'framer-motion';
 import { AiFillHeart } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
 
 import { storeContext } from 'common/context/storeContext';
 import { loaderContext } from 'common/context/loaderContext';
+import { postContext } from 'common/context/postContext';
 
 import { AvatarVerySmall } from 'common/components/Avatars';
 import { Header4, Header5 } from 'common/components/Headers';
@@ -17,7 +17,6 @@ import {
   PostContent,
   PostDetails,
 } from '../styles/Post.elements';
-import PostDetail from './PostDetail';
 
 export const defaultPost = {
   _id: '-1',
@@ -36,7 +35,7 @@ interface Props extends PostType {
   inDetails?: boolean;
   setAllContent?: boolean;
   postContentRef?: RefObject<HTMLDivElement>;
-  mutate: KeyedMutator<PostType[]> | (() => Promise<any>);
+  //mutate: KeyedMutator<PostType[]> | (() => Promise<any>);
 }
 
 const Post: FC<Props> = props => {
@@ -45,7 +44,6 @@ const Post: FC<Props> = props => {
     author,
     content,
     likes,
-    commentsCount,
     imageURLs,
     isPublic,
     comments,
@@ -54,13 +52,12 @@ const Post: FC<Props> = props => {
     inDetails,
     setAllContent,
     postContentRef,
-    mutate,
+    //mutate,
   } = props;
 
+  const { showPost } = useContext(postContext);
   const { likedPosts, refetchAll } = useContext(storeContext);
   const { setLoading } = useContext(loaderContext);
-
-  const [details, setDetails] = useState(false);
 
   const handleLikeClick = (
     e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
@@ -75,51 +72,47 @@ const Post: FC<Props> = props => {
 
         const helper = () => {
           made++;
-          if (made === 2) resolve('success');
+          if (made === 1) resolve('success');
         };
 
-        mutate().then(helper);
+        //mutate().then(helper);
         refetchAll().then(helper);
       }).then(() => setLoading(false));
     });
   };
 
   return (
-    <>
-      <AnimatePresence>
-        {details && (
-          <PostDetail {...props} closeDetail={() => setDetails(false)} />
-        )}
-      </AnimatePresence>
-
-      <PostContainer
+    <PostContainer
+      inDetails={inDetails}
+      onClick={() => {
+        if (!dontOpen) {
+          showPost(_id);
+        }
+      }}
+    >
+      <PostAuthor>
+        <AvatarVerySmall imageURL={author.imageURL} />
+        <div>
+          <Header4>{author.fName + ' ' + author.lName}</Header4>
+          {!comment && <Header5>{isPublic ? 'Public' : 'Friends'}</Header5>}
+        </div>
+      </PostAuthor>
+      <PostContent
         inDetails={inDetails}
-        onClick={() => !dontOpen && setDetails(!details)}
+        setAllContent={setAllContent}
+        ref={postContentRef}
       >
-        <PostAuthor>
-          <AvatarVerySmall imageURL={author.imageURL} />
-          <div>
-            <Header4>{author.fName + ' ' + author.lName}</Header4>
-            {!comment && <Header5>{isPublic ? 'Public' : 'Friends'}</Header5>}
-          </div>
-        </PostAuthor>
-        <PostContent
-          inDetails={inDetails}
-          setAllContent={setAllContent}
-          ref={postContentRef}
-        >
-          {content}
-        </PostContent>
-        <PostDetails liked={likedPosts.some(post => post._id === _id)}>
-          <span className="heart" onClick={handleLikeClick} tabIndex={0}>
-            <AiFillHeart /> {likes}
-          </span>
-          <span>
-            <FaComment /> {commentsCount}
-          </span>
-        </PostDetails>
-      </PostContainer>
-    </>
+        {content}
+      </PostContent>
+      <PostDetails liked={likedPosts.some(post => post._id === _id)}>
+        <span className="heart" onClick={handleLikeClick} tabIndex={0}>
+          <AiFillHeart /> {likes}
+        </span>
+        <span>
+          <FaComment /> {comments.length}
+        </span>
+      </PostDetails>
+    </PostContainer>
   );
 };
 

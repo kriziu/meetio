@@ -1,4 +1,6 @@
-import { FC, MutableRefObject } from 'react';
+import { FC, MutableRefObject, useContext } from 'react';
+
+import { postContext } from 'common/context/postContext';
 
 import { Button } from 'common/components/Button';
 import UserCard from 'common/components/UserCard/UserCard';
@@ -23,7 +25,10 @@ const Notification: FC<Props> = ({
   read,
   childrenRefs,
   index,
+  postId,
 }) => {
+  const { showPost } = useContext(postContext);
+
   return (
     <UserCard
       {...who}
@@ -32,7 +37,7 @@ const Notification: FC<Props> = ({
       ref={(el: HTMLLIElement) => el && (childrenRefs.current[index] = el)}
       htmlId={_id}
     >
-      <Button>Check</Button>
+      <Button onClick={() => showPost(postId)}>Check</Button>
     </UserCard>
   );
 };
