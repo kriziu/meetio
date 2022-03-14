@@ -34,6 +34,7 @@ const Comment: FC<Props> = ({
 
   return (
     <CommentContainer
+      as="div"
       onClick={() => showPost(_id)}
       tabIndex={0}
       onKeyDown={e => focusClick(e, () => showPost(_id))}

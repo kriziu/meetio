@@ -5,10 +5,9 @@ import getUserId from 'backend/utils/getUserId';
 import postModel from 'backend/models/post.model';
 import userModel from 'backend/models/user.model';
 import likeModel from 'backend/models/like.model';
+import connectionModel from 'backend/models/connection.model';
 
-// loader jak sie daje like przy polubieniu w details post
 // KOMENTARZE (pisanie)
-// WIDOCZNOSC POSTOW
 // FOR YOU PAGE
 // OGOLNE TESTY ITD
 
@@ -20,9 +19,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       case 'GET':
         const { author } = req.query;
 
-        const postsDB = await postModel
-          .find({ author })
-          .populate({ path: 'author', model: userModel });
+        const connection = await connectionModel.findOne({
+          $or: [{ users: [_id, author] }, { users: [author, _id] }],
+          group: false,
+        });
+
+        let postsDB;
+
+        if (connection || _id.toString() === author)
+          postsDB = await postModel
+            .find({ author })
+            .populate({ path: 'author', model: userModel });
+        else
+          postsDB = await postModel
+            .find({ author, isPublic: true })
+            .populate({ path: 'author', model: userModel });
 
         const posts: PostType[] = [];
 

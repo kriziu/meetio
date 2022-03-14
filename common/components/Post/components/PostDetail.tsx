@@ -1,4 +1,4 @@
-import { FC, useContext, useRef, useState, WheelEvent } from 'react';
+import { FC, useContext, useEffect, useRef, useState, WheelEvent } from 'react';
 
 import useSWR from 'swr';
 import { motion } from 'framer-motion';
@@ -40,6 +40,11 @@ const PostDetail: FC<Props> = ({ _id }) => {
 
   const { data, error, mutate } = useSWR<PostType>(`/api/post/${_id}`);
 
+  useEffect(() => {
+    if (!data && !error) setLoading(true);
+    else setLoading(false);
+  }, [data, error, setLoading]);
+
   const handlers = useSwipeable({
     onSwipedUp: e => {
       if (e.absY > 50 && !allContent) setShowComments(true);
@@ -74,14 +79,9 @@ const PostDetail: FC<Props> = ({ _id }) => {
     setShowComments(true);
   };
 
-  if (!data && !error) {
-    setLoading(true);
-    return null;
-  }
+  if (!data && !error) return null;
 
   if (error || !data) return null;
-
-  setLoading(false);
 
   return (
     <Portal>
