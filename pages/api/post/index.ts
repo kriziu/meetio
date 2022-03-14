@@ -6,10 +6,10 @@ import postModel from 'backend/models/post.model';
 import userModel from 'backend/models/user.model';
 import likeModel from 'backend/models/like.model';
 
+// KOMENTARZE (url, pisanie, mutations jakas logika)
 // DODAC OSOBNA METODE DO ROBIENIA POWIADOMIEN ABY BYLA BARDZIEJ REUZYWALNA (sprawdz plik like.ts)
 // WIDOCZNOSC POSTOW
 // DOPRACOWAC POWIADOMIENIA ABY DALO SIE SPRAWDZIC ITD
-// KOMENTARZE
 // FOR YOU PAGE
 // OGOLNE TESTY ITD
 

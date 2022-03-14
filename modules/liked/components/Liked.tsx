@@ -38,7 +38,7 @@ const Liked: FC = () => {
             <motion.li key={post._id} variants={animateListItem}>
               <Post
                 {...post}
-                mutate={() => new Promise(resolve => resolve('success'))}
+                //mutate={() => new Promise(resolve => resolve('success'))}
               />
             </motion.li>
           ))}
