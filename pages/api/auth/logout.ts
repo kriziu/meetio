@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import connectDB from 'backend/middlewares/connectDB';
+import connectDB from 'backend/utils/connectDB';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

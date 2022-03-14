@@ -3,9 +3,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import cloudinary from 'cloudinary';
 
-import connectDB from 'backend/middlewares/connectDB';
+import connectDB from 'backend/utils/connectDB';
 import userModel from 'backend/models/user.model';
-import getUserId from 'backend/middlewares/getUserId';
+import getUserId from 'backend/utils/getUserId';
 
 export const config = {
   api: {

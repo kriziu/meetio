@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from 'backend/middlewares/connectDB';
+import connectDB from 'backend/utils/connectDB';
 import connectionModel from 'backend/models/connection.model';
 import userModel from 'backend/models/user.model';
-import getUserId from 'backend/middlewares/getUserId';
+import getUserId from 'backend/utils/getUserId';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);

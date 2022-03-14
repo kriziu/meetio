@@ -1,10 +1,11 @@
 import { FC, useContext, useRef, useState, WheelEvent } from 'react';
 
-import useSWR, { KeyedMutator } from 'swr';
+import useSWR from 'swr';
 import { motion } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 
 import { postContext } from 'common/context/postContext';
+import { loaderContext } from 'common/context/loaderContext';
 
 import Portal from 'common/components/Portal';
 import { Comments, CustomBackground } from '../styles/PostDetails.elements';
@@ -29,6 +30,7 @@ interface Props {
 
 const PostDetail: FC<Props> = ({ _id }) => {
   const { showPost } = useContext(postContext);
+  const { setLoading } = useContext(loaderContext);
 
   const listRef = useRef<HTMLUListElement>(null);
   const postContentRef = useRef<HTMLDivElement>(null);
@@ -36,7 +38,7 @@ const PostDetail: FC<Props> = ({ _id }) => {
   const [showComments, setShowComments] = useState(false);
   const [allContent, setAllContent] = useState(false);
 
-  const { data, error } = useSWR<PostType>(`/api/post/${_id}`);
+  const { data, error, mutate } = useSWR<PostType>(`/api/post/${_id}`);
 
   const handlers = useSwipeable({
     onSwipedUp: e => {
@@ -72,9 +74,14 @@ const PostDetail: FC<Props> = ({ _id }) => {
     setShowComments(true);
   };
 
-  if (!data && !error) return null; // ladowanie potemn
+  if (!data && !error) {
+    setLoading(true);
+    return null;
+  }
 
   if (error || !data) return null;
+
+  setLoading(false);
 
   return (
     <Portal>
@@ -95,7 +102,7 @@ const PostDetail: FC<Props> = ({ _id }) => {
           onClick={() => setAllContent(prev => !prev)}
         >
           <Post
-            //mutate={() => {}}
+            mutate={mutate}
             {...data}
             dontOpen
             inDetails
@@ -122,7 +129,7 @@ const PostDetail: FC<Props> = ({ _id }) => {
           >
             {data.comments.map(comment => (
               <motion.li variants={animateListItem} key={comment._id}>
-                <Comment {...comment} />
+                <Comment {...comment} mutate={mutate} />
               </motion.li>
             ))}
           </motion.ul>

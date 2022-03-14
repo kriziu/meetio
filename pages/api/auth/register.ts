@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import bcrypt from 'bcrypt';
-import connectDB from 'backend/middlewares/connectDB';
+import connectDB from 'backend/utils/connectDB';
 import userModel from 'backend/models/user.model';
 import { generateRefresh, week } from 'common/lib/generateTokens';
 

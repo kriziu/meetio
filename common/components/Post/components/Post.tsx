@@ -17,6 +17,8 @@ import {
   PostContent,
   PostDetails,
 } from '../styles/Post.elements';
+import { handleLikeClick } from '../helpers';
+import { focusClick } from 'common/lib/utility';
 
 export const defaultPost = {
   _id: '-1',
@@ -35,7 +37,7 @@ interface Props extends PostType {
   inDetails?: boolean;
   setAllContent?: boolean;
   postContentRef?: RefObject<HTMLDivElement>;
-  //mutate: KeyedMutator<PostType[]> | (() => Promise<any>);
+  mutate: KeyedMutator<PostType[]> | (() => Promise<any>);
 }
 
 const Post: FC<Props> = props => {
@@ -52,34 +54,12 @@ const Post: FC<Props> = props => {
     inDetails,
     setAllContent,
     postContentRef,
-    //mutate,
+    mutate,
   } = props;
 
   const { showPost } = useContext(postContext);
   const { likedPosts, refetchAll } = useContext(storeContext);
   const { setLoading } = useContext(loaderContext);
-
-  const handleLikeClick = (
-    e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-  ) => {
-    e.stopPropagation();
-
-    setLoading(true);
-
-    axios.post('/api/post/like', { postId: _id }).then(() => {
-      new Promise(resolve => {
-        let made = 0;
-
-        const helper = () => {
-          made++;
-          if (made === 1) resolve('success');
-        };
-
-        //mutate().then(helper);
-        refetchAll().then(helper);
-      }).then(() => setLoading(false));
-    });
-  };
 
   return (
     <PostContainer
@@ -89,6 +69,8 @@ const Post: FC<Props> = props => {
           showPost(_id);
         }
       }}
+      tabIndex={inDetails ? -1 : 0}
+      onKeyDown={e => focusClick(e, () => showPost(_id))}
     >
       <PostAuthor>
         <AvatarVerySmall imageURL={author.imageURL} />
@@ -105,7 +87,16 @@ const Post: FC<Props> = props => {
         {content}
       </PostContent>
       <PostDetails liked={likedPosts.some(post => post._id === _id)}>
-        <span className="heart" onClick={handleLikeClick} tabIndex={0}>
+        <span
+          className="heart"
+          onClick={e => handleLikeClick(e, _id, setLoading, refetchAll, mutate)}
+          tabIndex={0}
+          onKeyDown={e =>
+            focusClick(e, () =>
+              handleLikeClick(null, _id, setLoading, refetchAll, mutate)
+            )
+          }
+        >
           <AiFillHeart /> {likes}
         </span>
         <span>

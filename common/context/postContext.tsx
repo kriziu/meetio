@@ -1,4 +1,6 @@
-import { createContext, FC, useState } from 'react';
+import { createContext, FC, useEffect, useState } from 'react';
+
+import { useRouter } from 'next/router';
 
 import { AnimatePresence } from 'framer-motion';
 
@@ -11,9 +13,21 @@ export const postContext = createContext<{
 const PostProvider: FC = ({ children }) => {
   const [selectedPost, setSelectedPost] = useState<string | null>(null);
 
+  const router = useRouter();
+
   const showPost = (_id: string | null) => {
-    setSelectedPost(_id);
+    const { pathname, query } = router;
+
+    if (_id) router.push({ pathname, query: { ...query, postId: _id } });
+    else router.push({ pathname, query: { ...query, postId: '' } });
   };
+
+  useEffect(() => {
+    const { postId } = router.query;
+
+    if (postId) setSelectedPost(postId.toString());
+    else setSelectedPost('');
+  }, [router.query]);
 
   return (
     <postContext.Provider value={{ showPost }}>

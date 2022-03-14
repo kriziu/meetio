@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from 'backend/middlewares/connectDB';
+import connectDB from 'backend/utils/connectDB';
 import userModel from 'backend/models/user.model';
 import postModel from 'backend/models/post.model';
 import likeModel from 'backend/models/like.model';

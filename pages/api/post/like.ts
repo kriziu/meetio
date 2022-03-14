@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from 'backend/middlewares/connectDB';
-import getUserId from 'backend/middlewares/getUserId';
+import connectDB from 'backend/utils/connectDB';
+import getUserId from 'backend/utils/getUserId';
 import postModel from 'backend/models/post.model';
 import likeModel from 'backend/models/like.model';
 import userModel from 'backend/models/user.model';
 import notificationModel from 'backend/models/notification.model';
+import { createNotification } from 'backend/utils/notification';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -45,14 +46,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await newLike.save();
 
       if (!_id.equals(postToLike.author as any)) {
-        const newNotification = new notificationModel({
-          date: new Date(),
-          type: 'like',
-          who: _id,
-          to: postToLike.author,
-          postId: postToLike._id,
-        });
-        await newNotification.save();
+        await createNotification(
+          _id,
+          postToLike.author,
+          postToLike._id,
+          'like'
+        );
       }
 
       return res.json(postToLike);

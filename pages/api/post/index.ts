@@ -1,15 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from 'backend/middlewares/connectDB';
-import getUserId from 'backend/middlewares/getUserId';
+import connectDB from 'backend/utils/connectDB';
+import getUserId from 'backend/utils/getUserId';
 import postModel from 'backend/models/post.model';
 import userModel from 'backend/models/user.model';
 import likeModel from 'backend/models/like.model';
 
-// KOMENTARZE (url, pisanie, mutations jakas logika)
-// DODAC OSOBNA METODE DO ROBIENIA POWIADOMIEN ABY BYLA BARDZIEJ REUZYWALNA (sprawdz plik like.ts)
+// loader jak sie daje like przy polubieniu w details post
+// KOMENTARZE (pisanie)
 // WIDOCZNOSC POSTOW
-// DOPRACOWAC POWIADOMIENIA ABY DALO SIE SPRAWDZIC ITD
 // FOR YOU PAGE
 // OGOLNE TESTY ITD
 

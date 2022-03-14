@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from 'backend/middlewares/connectDB';
+import connectDB from 'backend/utils/connectDB';
 import inviteModel from 'backend/models/invite.model';
 import connectionModel from 'backend/models/connection.model';
-import getUserId from 'backend/middlewares/getUserId';
+import getUserId from 'backend/utils/getUserId';
 import userModel from 'backend/models/user.model';
 import messageModel from 'backend/models/message.model';
 

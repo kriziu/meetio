@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from 'backend/middlewares/connectDB';
-import getUserId from 'backend/middlewares/getUserId';
+import connectDB from 'backend/utils/connectDB';
+import getUserId from 'backend/utils/getUserId';
 import inviteModel from 'backend/models/invite.model';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

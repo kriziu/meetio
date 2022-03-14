@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from 'backend/middlewares/connectDB';
+import connectDB from 'backend/utils/connectDB';
 import followModel from 'backend/models/follow.model';
-import getUserId from 'backend/middlewares/getUserId';
+import getUserId from 'backend/utils/getUserId';
 import userModel from 'backend/models/user.model';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
