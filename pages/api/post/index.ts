@@ -6,7 +6,10 @@ import postModel from 'backend/models/post.model';
 import userModel from 'backend/models/user.model';
 import likeModel from 'backend/models/like.model';
 import connectionModel from 'backend/models/connection.model';
+import { sendError } from 'backend/utils/error';
+import { createNotification } from 'backend/utils/notification';
 
+// security przy wyswietlaniu details posta czy jest sie w znajomych
 // KOMENTARZE (pisanie)
 // FOR YOU PAGE
 // OGOLNE TESTY ITD
@@ -47,7 +50,45 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.json(posts);
 
       case 'POST':
-        const { content, isPublic, imageURLs } = req.body;
+        const { content, isPublic, imageURLs, parentPost } = req.body;
+
+        if (parentPost) {
+          const postToComment = await postModel.findById(parentPost);
+          if (!postToComment) return res.status(404).end();
+
+          const newComment = new postModel({
+            content,
+            isPublic,
+            imageURLs,
+            comments: [],
+            author: _id,
+            parentPost,
+          });
+          await newComment.save();
+
+          if (postToComment.author.toString() !== _id.toString()) {
+            if (postToComment.parentPost)
+              await createNotification(
+                _id,
+                postToComment.author,
+                newComment._id,
+                'reply'
+              );
+            else
+              await createNotification(
+                _id,
+                postToComment.author,
+                newComment._id,
+                'comment'
+              );
+          }
+
+          await postToComment.updateOne({
+            $push: { comments: newComment._id },
+          });
+
+          return res.json(newComment);
+        }
 
         const newPost = new postModel({
           content,
@@ -64,10 +105,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.end();
   } catch (err) {
-    const msg = (err as Error).message;
-    console.log(msg);
-    if (msg) return res.status(500).send({ error: msg });
-    res.status(500).end();
+    return sendError(err, res);
   }
 };
 

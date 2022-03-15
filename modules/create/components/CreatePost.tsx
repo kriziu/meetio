@@ -31,6 +31,7 @@ const CreatePost: FC = () => {
           isPublic,
           content,
           imageURLs: [],
+          //parentPost: '622f4e3617f95f6841e6201b',
         })
         .then(() => router.push(`/profile/${_id}`)),
       'Creating post...',

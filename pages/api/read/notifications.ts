@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import connectDB from 'backend/utils/connectDB';
 import getUserId from 'backend/utils/getUserId';
 import notificationModel from 'backend/models/notification.model';
+import { sendError } from 'backend/utils/error';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -15,10 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.json(notifications);
   } catch (err) {
-    const msg = (err as Error).message;
-    console.log(msg);
-    if (msg) return res.status(500).send({ error: msg });
-    res.status(500).end();
+    return sendError(err, res);
   }
 };
 

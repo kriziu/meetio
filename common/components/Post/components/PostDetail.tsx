@@ -1,11 +1,22 @@
-import { FC, useContext, useEffect, useRef, useState, WheelEvent } from 'react';
+import {
+  FC,
+  FormEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  WheelEvent,
+} from 'react';
 
 import useSWR from 'swr';
 import { motion } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
+import { BiSend } from 'react-icons/bi';
+import axios from 'axios';
 
 import { postContext } from 'common/context/postContext';
 import { loaderContext } from 'common/context/loaderContext';
+import useWindowSize from 'common/hooks/useWindowSize';
 
 import Portal from 'common/components/Portal';
 import { Comments, CustomBackground } from '../styles/PostDetails.elements';
@@ -23,6 +34,8 @@ import {
   animateList,
   animateListItem,
 } from 'common/animations/list.animations';
+import { Input } from 'common/components/Input';
+import { promiseToast } from 'common/lib/toasts';
 
 interface Props {
   _id: string;
@@ -32,15 +45,19 @@ const PostDetail: FC<Props> = ({ _id }) => {
   const { showPost } = useContext(postContext);
   const { setLoading } = useContext(loaderContext);
 
+  const [, height] = useWindowSize();
+
   const listRef = useRef<HTMLUListElement>(null);
   const postContentRef = useRef<HTMLDivElement>(null);
 
+  const [input, setInput] = useState('');
   const [showComments, setShowComments] = useState(false);
   const [allContent, setAllContent] = useState(false);
 
   const { data, error, mutate } = useSWR<PostType>(`/api/post/${_id}`);
 
   useEffect(() => {
+    setShowComments(false);
     if (!data && !error) setLoading(true);
     else setLoading(false);
   }, [data, error, setLoading]);
@@ -79,6 +96,24 @@ const PostDetail: FC<Props> = ({ _id }) => {
     setShowComments(true);
   };
 
+  const handleCommentCreate = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setInput('');
+
+    promiseToast(
+      axios
+        .post<PostType>('/api/post', {
+          isPublic: data?.isPublic,
+          content: input,
+          imageURLs: [],
+          parentPost: _id,
+        })
+        .then(() => mutate()),
+      'Creating comment...',
+      'Commented!'
+    );
+  };
+
   if (!data && !error) return null;
 
   if (error || !data) return null;
@@ -86,6 +121,7 @@ const PostDetail: FC<Props> = ({ _id }) => {
   return (
     <Portal>
       <CustomBackground
+        height={height}
         onWheel={handleWheel}
         animate={true ? 'shown' : 'hidden'}
         {...animateDetails}
@@ -133,6 +169,12 @@ const PostDetail: FC<Props> = ({ _id }) => {
               </motion.li>
             ))}
           </motion.ul>
+          <form className="input-container" onSubmit={handleCommentCreate}>
+            <Input value={input} onChange={e => setInput(e.target.value)} />
+            <Button icon>
+              <BiSend />
+            </Button>
+          </form>
         </Comments>
       </CustomBackground>
     </Portal>

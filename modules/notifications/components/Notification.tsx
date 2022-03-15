@@ -6,7 +6,7 @@ import { Button } from 'common/components/Button';
 import UserCard from 'common/components/UserCard/UserCard';
 
 const messages = {
-  like: 'Liked you post.',
+  like: 'Liked your post.',
   mention: 'Mentioned you.',
   reply: 'Replied.',
   comment: 'Commented.',

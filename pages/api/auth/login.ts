@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import connectDB from 'backend/utils/connectDB';
 import userModel from 'backend/models/user.model';
 import { generateRefresh, week } from 'common/lib/generateTokens';
+import { sendError } from 'backend/utils/error';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, password } = req.body;
@@ -37,10 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(403).end();
   } catch (err) {
-    const msg = (err as Error).message;
-    console.log(msg);
-    if (msg) return res.status(500).send({ error: msg });
-    res.status(500).end();
+    return sendError(err, res);
   }
 };
 

@@ -6,6 +6,7 @@ import cloudinary from 'cloudinary';
 import connectDB from 'backend/utils/connectDB';
 import userModel from 'backend/models/user.model';
 import getUserId from 'backend/utils/getUserId';
+import { sendError } from 'backend/utils/error';
 
 export const config = {
   api: {
@@ -54,10 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.json({ url: user.imageURL });
     }
   } catch (err) {
-    const msg = (err as Error).message;
-    console.log(msg);
-    if (msg) return res.status(500).send({ error: msg });
-    res.status(500).end();
+    return sendError(err, res);
   }
 };
 

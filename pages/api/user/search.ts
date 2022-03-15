@@ -5,6 +5,7 @@ import { Document } from 'mongoose';
 import connectDB from 'backend/utils/connectDB';
 import userModel, { UserModelType } from 'backend/models/user.model';
 import getUserId from 'backend/utils/getUserId';
+import { sendError } from 'backend/utils/error';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let { term } = req.query;
@@ -42,10 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.json(users);
   } catch (err) {
-    const msg = (err as Error).message;
-    console.log(msg);
-    if (msg) return res.status(500).send({ error: msg });
-    res.status(500).end();
+    return sendError(err, res);
   }
 };
 

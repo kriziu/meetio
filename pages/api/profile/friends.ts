@@ -4,6 +4,7 @@ import connectDB from 'backend/utils/connectDB';
 import connectionModel from 'backend/models/connection.model';
 import userModel from 'backend/models/user.model';
 import getUserId from 'backend/utils/getUserId';
+import { sendError } from 'backend/utils/error';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -17,8 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           $or: [{ users: [_id, friendId] }, { users: [friendId, _id] }],
           group: false,
         });
-
-        console.log(connectionToDelete);
 
         await connectionToDelete?.delete();
 
@@ -47,10 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.json(friends);
     }
   } catch (err) {
-    const msg = (err as Error).message;
-    console.log(msg);
-    if (msg) return res.status(500).send({ error: msg });
-    res.status(500).end();
+    return sendError(err, res);
   }
 };
 

@@ -6,6 +6,7 @@ import connectionModel from 'backend/models/connection.model';
 import getUserId from 'backend/utils/getUserId';
 import userModel from 'backend/models/user.model';
 import messageModel from 'backend/models/message.model';
+import { sendError } from 'backend/utils/error';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
@@ -87,10 +88,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).end();
     }
   } catch (err) {
-    const msg = (err as Error).message;
-    console.log(msg);
-    if (msg) return res.status(500).send({ error: msg });
-    res.status(500).end();
+    return sendError(err, res);
   }
 };
 

@@ -45,7 +45,6 @@ export const Button = styled.button<{
     fill: black;
     width: 2.3rem;
     height: 2.3rem;
-    mix-blend-mode: overlay;
   }
 
   :disabled {
