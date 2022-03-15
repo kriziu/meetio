@@ -20,6 +20,7 @@ const Friends: FC = () => {
   const [, height] = useWindowSize();
 
   const [notify, setNotify] = useState(false);
+  const [sort, setSort] = useState<'A' | 'Z'>('A');
 
   useEffect(() => {
     setNotify(checkIfNotRead(invites));
@@ -39,8 +40,8 @@ const Friends: FC = () => {
       <SearchList
         input={search}
         handleInputChange={e => setSearch(e.target.value)}
-        sort="A"
-        handleSortChange={() => {}}
+        sort={sort}
+        handleSortChange={setSort}
       />
       {friends && (
         <StyledUl
@@ -51,7 +52,7 @@ const Friends: FC = () => {
         >
           {friends
             ?.filter(friend => filterUser(friend, search))
-            .sort((a, b) => sortAlph(a, b))
+            .sort((a, b) => sortAlph(a, b, sort))
             .map(args => {
               return <Friend {...args} key={args._id} />;
             })}

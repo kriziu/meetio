@@ -73,10 +73,16 @@ const ProfilePosts: FC<Props> = ({ topVisible, setTopVisible, user }) => {
           <BsChevronDown />
         </motion.div>
       </Flex>
+
       {!topVisible && user._id === _id && (
-        <Link href="/liked" passHref>
-          <Button as="a">Liked posts</Button>
-        </Link>
+        <Flex className="btn">
+          <Link href="/liked" passHref>
+            <Button as="a">Liked posts</Button>
+          </Link>
+          <Link href="/create" passHref>
+            <Button as="a">Create post</Button>
+          </Link>
+        </Flex>
       )}
 
       <motion.ul

@@ -27,6 +27,7 @@ const Followers: FC = () => {
   const [, height] = useWindowSize();
 
   const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<'A' | 'Z'>('A');
 
   const router = useRouter();
   const userId = router.query.userId as string;
@@ -43,8 +44,8 @@ const Followers: FC = () => {
       <SearchList
         input={search}
         handleInputChange={e => setSearch(e.target.value)}
-        sort="A"
-        handleSortChange={() => {}}
+        sort={sort}
+        handleSortChange={setSort}
       />
       <Header2>{me ? 'Your followers' : 'Followers'}</Header2>
       <motion.ul variants={animateList} initial="hidden" animate="show">
@@ -52,7 +53,7 @@ const Followers: FC = () => {
 
         {data
           ?.filter(follower => filterUser(follower, search))
-          .sort((a, b) => sortAlph(a, b))
+          .sort((a, b) => sortAlph(a, b, sort))
           .map(follower => (
             <Follower
               {...follower}
@@ -70,7 +71,7 @@ const Followers: FC = () => {
           <motion.ul variants={animateList} initial="hidden" animate="show">
             {followers
               .filter(follower => filterUser(follower, search))
-              .sort((a, b) => sortAlph(a, b))
+              .sort((a, b) => sortAlph(a, b, sort))
               .map(follower => (
                 <Follower
                   {...follower}

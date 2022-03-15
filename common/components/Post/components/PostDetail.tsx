@@ -155,7 +155,7 @@ const PostDetail: FC<Props> = ({ _id }) => {
               setShowComments(!showComments);
             }}
           >
-            Comments
+            {data.parentPost ? 'Replies' : 'Commets'}
           </Header3>
           <motion.ul
             ref={listRef}

@@ -9,11 +9,6 @@ import connectionModel from 'backend/models/connection.model';
 import { sendError } from 'backend/utils/error';
 import { createNotification } from 'backend/utils/notification';
 
-// security przy wyswietlaniu details posta czy jest sie w znajomych
-// KOMENTARZE (pisanie)
-// FOR YOU PAGE
-// OGOLNE TESTY ITD
-
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = getUserId(req);
 
@@ -55,6 +50,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (parentPost) {
           const postToComment = await postModel.findById(parentPost);
           if (!postToComment) return res.status(404).end();
+
+          if (!postToComment.isPublic) {
+            const connection = await connectionModel.findOne({
+              $or: [
+                { users: [_id, postToComment.author] },
+                { users: [postToComment.author, _id] },
+              ],
+              group: false,
+            });
+
+            if (
+              !connection &&
+              _id.toString() !== postToComment.author.toString()
+            )
+              return res.status(403).end();
+          }
 
           const newComment = new postModel({
             content,

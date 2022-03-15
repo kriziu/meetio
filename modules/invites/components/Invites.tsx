@@ -32,6 +32,7 @@ const Invites: FC = () => {
   const [, height] = useWindowSize();
 
   const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<'A' | 'Z'>('A');
 
   const { listRef, childrenRefs } = useObserverRead('/api/read/invites');
 
@@ -40,8 +41,8 @@ const Invites: FC = () => {
       <SearchList
         input={search}
         handleInputChange={e => setSearch(e.target.value)}
-        sort="A"
-        handleSortChange={() => {}}
+        sort={sort}
+        handleSortChange={setSort}
       />
       <Header1>Invites</Header1>
       <motion.ul
@@ -52,7 +53,7 @@ const Invites: FC = () => {
       >
         {invites
           .filter(invite => searchInvite(invite, search))
-          .sort((a, b) => sortAlph(a.from, b.from))
+          .sort((a, b) => sortAlph(a.from, b.from, sort))
           .map((invite, index) => (
             <Invite
               {...invite}
@@ -66,7 +67,7 @@ const Invites: FC = () => {
       <motion.ul variants={animateList} initial="hidden" animate="show">
         {mineInvites
           .filter(invite => searchInvite(invite, search, true))
-          .sort((a, b) => sortAlph(a.to, b.to))
+          .sort((a, b) => sortAlph(a.to, b.to, sort))
           .map(invite => (
             <Invite {...invite} key={invite._id} />
           ))}

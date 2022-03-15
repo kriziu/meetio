@@ -1,9 +1,10 @@
-import { FC, MouseEvent, RefObject, useContext } from 'react';
+import { FC, RefObject, useContext } from 'react';
 
+import Link from 'next/link';
 import { KeyedMutator } from 'swr';
-import axios from 'axios';
 import { AiFillHeart } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
+import { useRouter } from 'next/router';
 
 import { storeContext } from 'common/context/storeContext';
 import { loaderContext } from 'common/context/loaderContext';
@@ -61,6 +62,9 @@ const Post: FC<Props> = props => {
   const { likedPosts, refetchAll } = useContext(storeContext);
   const { setLoading } = useContext(loaderContext);
 
+  const router = useRouter();
+  const userId = router.query.userId as string;
+
   return (
     <PostContainer
       inDetails={inDetails}
@@ -72,13 +76,20 @@ const Post: FC<Props> = props => {
       tabIndex={inDetails ? -1 : 0}
       onKeyDown={e => focusClick(e, () => showPost(_id))}
     >
-      <PostAuthor>
-        <AvatarVerySmall imageURL={author.imageURL} />
-        <div>
-          <Header4>{author.fName + ' ' + author.lName}</Header4>
-          {!comment && <Header5>{isPublic ? 'Public' : 'Friends'}</Header5>}
-        </div>
-      </PostAuthor>
+      <Link href={`/profile/${author._id}`} passHref>
+        <PostAuthor
+          as="a"
+          onClick={e => {
+            if (!inDetails || userId === author._id) e.preventDefault();
+          }}
+        >
+          <AvatarVerySmall imageURL={author.imageURL} />
+          <div>
+            <Header4>{author.fName + ' ' + author.lName}</Header4>
+            {!comment && <Header5>{isPublic ? 'Public' : 'Friends'}</Header5>}
+          </div>
+        </PostAuthor>
+      </Link>
       <PostContent
         inDetails={inDetails}
         setAllContent={setAllContent}

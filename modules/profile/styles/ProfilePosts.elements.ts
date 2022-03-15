@@ -19,4 +19,11 @@ export const PostsContainer = motion(styled.div<{
     height: ${({ height }) => height - 230}px;
     ${scrollY}
   }
+
+  .btn {
+    justify-content: space-between;
+    a {
+      width: max-content;
+    }
+  }
 `);
