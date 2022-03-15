@@ -37,7 +37,7 @@ export const StyledDiv = styled.div`
 export const CreateCard = styled(Card)`
   textarea {
     width: 100%;
-    height: 25rem;
+    height: 25vh;
     background: none;
     resize: none;
     border: none;
