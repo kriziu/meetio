@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -21,7 +21,9 @@ const Login: FC = () => {
 
   const { email, password } = formData;
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!checkValidity()) return;
     if (!validateEmail(email.value)) {
@@ -29,7 +31,8 @@ const Login: FC = () => {
       return;
     }
 
-    axios
+    setLoading(true);
+    await axios
       .post<UserType>('/api/auth/login', {
         email: email.value,
         password: password.value,
@@ -45,6 +48,8 @@ const Login: FC = () => {
           errToast('Account with that email not found!');
         }
       });
+
+    setLoading(false);
   };
 
   return (
@@ -52,6 +57,7 @@ const Login: FC = () => {
       handleFormSubmit={handleLogin}
       btnTitle="Login"
       redirectTo="register"
+      loading={loading}
     >
       <Input
         placeholder="Email"

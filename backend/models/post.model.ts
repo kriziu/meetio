@@ -16,6 +16,7 @@ const postSchema = new mongoose.Schema<PostModelType>({
   imageURLs: [{ type: String, required: true }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
   parentPost: { type: mongoose.Schema.Types.ObjectId },
+  date: { type: Date, required: true },
 });
 
 const postModel =

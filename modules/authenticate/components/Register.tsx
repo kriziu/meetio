@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -24,7 +24,9 @@ const Register: FC = () => {
 
   const { fName, lName, email, password, checkPassword } = formData;
 
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!checkValidity()) return;
     if (!validateEmail(email.value)) {
@@ -36,7 +38,7 @@ const Register: FC = () => {
       return;
     }
 
-    axios
+    await axios
       .post('/api/auth/register', {
         fName: fName.value,
         lName: lName.value,
@@ -56,6 +58,7 @@ const Register: FC = () => {
       handleFormSubmit={handleRegister}
       btnTitle="Register"
       redirectTo="login"
+      loading={loading}
     >
       <Input
         placeholder="First name"

@@ -32,6 +32,7 @@ export declare global {
     likes: number;
     comments: PostType[];
     parentPost: string | null;
+    date: Date;
   }
 
   interface NotificationType {

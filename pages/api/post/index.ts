@@ -74,6 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             comments: [],
             author: _id,
             parentPost,
+            date: new Date(),
           });
           await newComment.save();
 
@@ -107,6 +108,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           imageURLs,
           comments: [],
           author: _id,
+          date: new Date(),
         });
 
         await newPost.save();
