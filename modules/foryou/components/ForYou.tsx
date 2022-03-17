@@ -10,12 +10,15 @@ import {
   animateList,
   animateListItem,
 } from 'common/animations/list.animations';
+import useWindowSize from 'common/hooks/useWindowSize';
 
 const ForYou: FC = () => {
   const { data, mutate } = useSWR<PostType[]>('/api/foryou');
 
+  const [, height] = useWindowSize();
+
   return (
-    <ForYouContainer>
+    <ForYouContainer height={height}>
       <Header1>For you</Header1>
       <motion.ul variants={animateList} initial="hidden" animate="show">
         {data?.map(post => (

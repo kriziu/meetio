@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
+import { scrollY } from 'common/styles/scroll';
 
-export const ForYouContainer = styled.div`
+export const ForYouContainer = styled.div<{ height: number }>`
   h1 {
     margin-bottom: 2rem;
   }
 
   ul {
-    // zrobic height
-    // dorobic tak jakby strony (jak sie przeskroluje na dol to wczytuje kolejne posty)
-    // mutate na komentowaniu (nie aktualizuje z nowa liczba komentarzy)
+    ${scrollY}
+    height: ${({ height }) => height - 150}px;
   }
 `;
