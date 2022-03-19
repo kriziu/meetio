@@ -27,9 +27,9 @@ export const BigSpinner: FC<{ loading: boolean }> = ({ loading }) => {
   return (
     <Flex
       style={{
-        height: '100vh',
+        height: '100%',
         position: 'absolute',
-        width: '100vw',
+        width: '100%',
         left: 0,
         top: 0,
         backgroundColor: 'black',

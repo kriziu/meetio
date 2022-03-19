@@ -1,13 +1,13 @@
 import { FC, useContext, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 import { userContext } from 'common/context/userContext';
 import { useBigSpinner } from 'common/hooks/useSpinner';
 
 import ProfilePosts from './ProfilePosts';
 import ProfileTop from './ProfileTop';
-import useSWR from 'swr';
 
 const Profile: FC = () => {
   const me = useContext(userContext).user;
@@ -45,7 +45,7 @@ const Profile: FC = () => {
     <>
       <ProfileTop
         user={user}
-        setUser={setUser}
+        setUserProfile={setUser}
         setTopVisible={setTopVisible}
         topVisible={topVisible}
       />

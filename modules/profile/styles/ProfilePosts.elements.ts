@@ -11,6 +11,9 @@ export const PostsContainer = motion(styled.div<{
   .icon {
     ${({ visible }) => !visible && 'margin-top: 2rem;'}
     flex-direction: column;
+    h3 {
+      cursor: pointer;
+    }
   }
 
   ul {

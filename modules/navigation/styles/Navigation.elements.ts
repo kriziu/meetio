@@ -23,7 +23,7 @@ export const NavBtn = styled.button<{
 
   ${({ notify }) => notificationDot(-1, -1, notify)}
 
-  position: fixed;
+  position: absolute;
 
   :hover {
     transform: scale(1.1);
@@ -94,8 +94,8 @@ export const NavBtnIcon = styled.span<{ opened: boolean }>`
 
 export const NavBackground = styled(Flex)`
   background-color: var(--color-primary);
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   position: absolute;
 
   a {

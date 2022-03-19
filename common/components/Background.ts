@@ -5,8 +5,8 @@ export const Background = styled.div<{
   h?: string;
 }>`
   background-color: rgba(0, 0, 0, 0.1);
-  width: ${({ w }) => (w ? w : '100vw')};
-  height: ${({ h }) => (h ? h : '100vh')};
+  width: ${({ w }) => (w ? w : '100%')};
+  height: ${({ h }) => (h ? h : '100%')};
   backdrop-filter: blur(2rem);
   position: absolute;
   z-index: -1;

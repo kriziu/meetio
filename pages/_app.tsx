@@ -19,9 +19,14 @@ import { Circle } from 'common/components/Shapes/Circle.elements';
 import { Background } from 'common/components/Background';
 import Search from 'modules/search/components/Search';
 import PostProvider from 'common/context/postContext';
+import { MainContainer } from 'common/components/MainContainer';
+import useWindowSize from 'common/hooks/useWindowSize';
+import { Flex } from 'common/components/Flex';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
+
+  const [, height] = useWindowSize(true);
 
   const padding = router.pathname === ('/login' || '/register') ? '0' : '2rem';
 
@@ -50,7 +55,6 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
                   closeButton={false}
                 />
                 <GlobalStyles />
-                <Navigation />
 
                 <div>
                   <Circle radius={30} position={{ x: 30, y: 50 }} />
@@ -67,20 +71,33 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
                   />
                 </div>
                 <Background />
-                <div style={{ padding }}>
-                  <Search />
-                  <AnimatePresence exitBeforeEnter>
-                    <motion.div
-                      key={router.route}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.1 }}
-                    >
-                      <Component {...pageProps} />
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
+                <Flex style={{ height: '100vh' }}>
+                  <MainContainer
+                    height={height}
+                    id="container"
+                    shadow={
+                      router.pathname !== '/login' &&
+                      router.pathname !== '/register'
+                    }
+                  >
+                    <Navigation />
+                    <div style={{ padding, width: '100%', height: '100%' }}>
+                      <Search />
+                      <AnimatePresence exitBeforeEnter>
+                        <motion.div
+                          key={router.route}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.1 }}
+                          style={{ width: '100%', height: '100%' }}
+                        >
+                          <Component {...pageProps} />
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  </MainContainer>
+                </Flex>
               </PostProvider>
             </LoaderProvider>
           </StoreProvider>

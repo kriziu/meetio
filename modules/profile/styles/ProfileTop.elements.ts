@@ -13,6 +13,16 @@ export const Center = styled(Flex)<{
 
   ${({ visible }) => !visible && 'pointer-events: none;'}
 
+  .avatar {
+    cursor: pointer;
+    margin-top: 0.5rem;
+  }
+
+  .logout {
+    width: 15rem;
+    margin-top: 2rem;
+  }
+
   h1 {
     margin-top: 2rem;
   }

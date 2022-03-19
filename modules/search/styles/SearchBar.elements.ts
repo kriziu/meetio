@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const TopContainer = styled.div`
   position: absolute;
-  width: 70vw;
+  width: 70%;
   margin-left: calc(50% - 5rem);
   top: 2.5rem;
   transform: translateX(-50%);

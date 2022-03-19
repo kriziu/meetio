@@ -8,6 +8,7 @@ export const PostContainer = styled(Card)<{ inDetails?: boolean }>`
   flex-direction: column;
   margin-bottom: 2rem;
   ${({ inDetails }) => inDetails && 'max-height: 100%;'};
+  cursor: ${({ inDetails }) => !inDetails && 'pointer'};
 `;
 
 export const PostAuthor = styled(Flex)`

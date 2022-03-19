@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 export const CommentContainer = styled.li`
   margin-top: 2rem;
   padding: 0 2rem;
+  cursor: pointer;
 `;
 
 export const CommentContent = styled.p`

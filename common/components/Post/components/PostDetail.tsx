@@ -45,7 +45,7 @@ const PostDetail: FC<Props> = ({ _id }) => {
   const { showPost } = useContext(postContext);
   const { setLoading } = useContext(loaderContext);
 
-  const [, height] = useWindowSize();
+  const [, height] = useWindowSize(true);
 
   const listRef = useRef<HTMLUListElement>(null);
   const postContentRef = useRef<HTMLDivElement>(null);
@@ -170,7 +170,11 @@ const PostDetail: FC<Props> = ({ _id }) => {
             ))}
           </motion.ul>
           <form className="input-container" onSubmit={handleCommentCreate}>
-            <Input value={input} onChange={e => setInput(e.target.value)} />
+            <Input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="Type a comment..."
+            />
             <Button icon>
               <BiSend />
             </Button>

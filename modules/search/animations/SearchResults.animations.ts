@@ -1,6 +1,6 @@
 export const animateContainer = {
-  open: {
-    height: '80vh',
+  open: (height: number) => ({
+    height: `${height}px`,
     padding: '2rem',
     opacity: 1,
     transition: {
@@ -8,7 +8,7 @@ export const animateContainer = {
       duration: 0.7,
       bounce: 0.4,
     },
-  },
+  }),
   closed: {
     height: 0,
     padding: 0,

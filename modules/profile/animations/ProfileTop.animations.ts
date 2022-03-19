@@ -4,7 +4,7 @@ export const animateProfileTop = {
     opacity: 1,
   },
   hidden: {
-    y: '-100vh',
+    y: '-100%',
     opacity: 0,
   },
 };

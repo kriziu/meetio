@@ -8,6 +8,7 @@ import { ResultsContainer } from '../styles/SearchResults.elements';
 import { Header2 } from 'common/components/Headers';
 import { animateContainer } from '../animations/SearchResults.animations';
 import SearchList from './SearchList';
+import useWindowSize from 'common/hooks/useWindowSize';
 
 let timeout: NodeJS.Timeout;
 
@@ -19,6 +20,7 @@ const SearchResults: FC<Props> = ({ search }) => {
   const [results, setResults] = useState<FetchedUserType[]>([]);
 
   const [Spinner, setLoading, loading] = useSpinner();
+  const [, height] = useWindowSize();
 
   useEffect(() => {
     setResults([]);
@@ -43,6 +45,7 @@ const SearchResults: FC<Props> = ({ search }) => {
       animate={search ? 'open' : 'closed'}
       variants={animateContainer}
       shown={!!search}
+      custom={height - 200}
     >
       <Header2>Search results</Header2>
       <Spinner />
